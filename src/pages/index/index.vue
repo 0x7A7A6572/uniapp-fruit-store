@@ -4,7 +4,7 @@
     <cui-float-action-button
       :action="action"
       :offset="changeDrawerOffset"
-	  @tap="changeDrawer"
+      @tap="changeDrawer"
     >
     </cui-float-action-button>
     <cui-float-action-button
@@ -17,19 +17,19 @@
       }}</text>
     </cui-float-action-button>
     <!-- 抽屉主页 -->
-    <scroll-view scroll-y class="DrawerPage" :class="drawerStatus ? 'show' : ''">
+    <scroll-view scroll-y class="DrawerPage" :class="getDrawerStatuStyle()">
       <cui-verticalnav>
         <!-- 顶部logo -->
         <cui-logo-navbar :logo="logosrc" @tap="changeDrawer"></cui-logo-navbar>
-        <!-- {{username}} -->
       </cui-verticalnav>
+      <!-- {{username}} -->
     </scroll-view>
     <!-- 点击抽屉外关闭抽屉 -->
-    <view class="DrawerClose" :class="drawerStatus ? 'show' : ''" @click="changeDrawer">
+    <view class="DrawerClose" :class="getDrawerStatuStyle()" @click="changeDrawer">
     </view>
     <!-- 抽屉内 -->
-    <scroll-view scroll-y class="DrawerWindow" :class="drawerStatus ? 'show' : ''">
-      <cui-user-drawer :menuList="menuList">
+    <scroll-view scroll-y class="DrawerWindow" :class="getDrawerStatuStyle()">
+      <cui-user-drawer :menuList="menuList" :userInfo="userInfo">
         <view v-if="userInfo.type == 'admin'" class="cu-item arrow" bindtap="toAdmin">
           <view class="content">
             <text class="cuIcon-crownfill text-yellow"></text>
@@ -43,65 +43,61 @@
 
 <script>
 import { useStore } from "vuex";
+import {ref, onMounted } from "vue"
 import CONST from "@/utils/const.js";
 import cuiVerticalnav from "@/components/cui-verticalnav.vue";
 import cuiFloatActionButton from "@/components/cui-float-action-button.vue";
 import cuiLogoNavbar from "@/components/cui-logo-navbar.vue";
 import cuiUserDrawer from "@/components/cui-user-drawer.vue";
 export default {
-  data() {
-    return {
-      /* 用户信息*/
-      userInfo: {
-        avatarUrl: "",
-        type: "admin",
-      },
-      menuList: CONST.menuList,
-      logosrc: CONST.logosrc,
-      /* 控制抽屉打开/关闭状态 */
-      drawerStatus: false,
-      action: false,
-      shoppingCartAction: false,
-      /* 购物车数据 */
-      shoppingCart: {
-        goodsList: [
-          {
-            goodsId: 1,
-            buyCount: 1,
-          },
-          {
-            goodsId: 2,
-            buyCount: 3,
-          },
-        ],
-      },
-      changeDrawerOffset: CONST.changeDrawerOffset,
-      shoppingCartOffset: CONST.shoppingCartOffset,
-      shoppingCartFabStyle: CONST.shoppingCartFabStyle,
+  components: { cuiVerticalnav, cuiFloatActionButton, cuiLogoNavbar, cuiUserDrawer, useStore,},
+  setup() {
+    const store = useStore();
+    let userInfo = store.getters.userInfo;
+    let menuList = CONST.menuList;
+    let logosrc = CONST.logosrc;
+    let drawerStatus = ref(false);
+    let action = ref(false);
+    let shoppingCartAction = false;
+    /* 购物车数据 */
+    let shoppingCart = {
+      goodsList: [
+        {goodsId: 1,buyCount: 1,},
+        {goodsId: 2, buyCount: 3,},
+      ],
     };
-  },
-  computed: {
-    // username() {
-    //   let res = useStore().getters.userInfo;
-    //   console.log("computed>>>", res);
-    //   return res;
-    // },
-  },
-  mounted() {},
-  components: {
-    cuiVerticalnav,
-    cuiFloatActionButton,
-    cuiLogoNavbar,
-    cuiUserDrawer,
-    useStore,
-  },
-  methods: {
-    changeDrawer(e) {
-      console.log(e, this.action);
-      this.drawerStatus = !this.drawerStatus;
-      this.action = !this.action;
-    },
-  },
+    let changeDrawerOffset = CONST.changeDrawerOffset;
+    let shoppingCartOffset = CONST.shoppingCartOffset;
+    let shoppingCartFabStyle = CONST.shoppingCartFabStyle;
+
+    function changeDrawer(){
+      // console.log("store.getters.drawerAction",store.getters.drawerAction)
+      // store.commit("updatedDrawerAction", !store.getters.drawerAction);
+      drawerStatus.value = !drawerStatus.value;
+      action.value = !action.value;
+    }
+
+    function getDrawerStatuStyle(){
+      let statu = drawerStatus.value ? 'show' : '';
+      return statu;
+    }
+
+    onMounted(()=>{
+      setTimeout(()=>{
+        if(drawerStatus.value == false && userInfo.nickName == null){
+           changeDrawer();
+        }
+      },1000)
+ 			console.log('----onMounted')
+ 		})
+
+    return {
+      userInfo,
+      menuList,logosrc,drawerStatus,
+      action,shoppingCartAction,shoppingCart,changeDrawerOffset,shoppingCartOffset,shoppingCartFabStyle,
+      changeDrawer, getDrawerStatuStyle
+    };
+  }
 };
 </script>
 
