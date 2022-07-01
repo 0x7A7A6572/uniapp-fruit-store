@@ -1,8 +1,10 @@
 import { createStore } from 'vuex';
-import login from '../api/login';
+// import login from '../api/login';
 export default createStore({
   //需要共享的组件状态
   state: {
+    showLog: false,
+    drawerAction: true,
     shoppingCart: {
       goodsList: [{
         goodsId: 1,
@@ -16,7 +18,7 @@ export default createStore({
     },
     //用户数据
     userInfo: {
-      openid: null,
+      id: null, /* 后端用code获取openid和session_key之后绑定到业务系统返回用户id */
       type: 'admin', /*用户类型 user，admin */
       vip: true,
       avatarUrl: '/static/images/avatar.png', /* 用户头像 */
@@ -32,30 +34,79 @@ export default createStore({
         }]
       }]
     },
+    systemInfo: {
+      customBar: 0,
+      statusBar: 0,
+    }
   },
   mutations: {
+    updatedDrawerAction(state, statu) {
+      console.log("i'm change", statu)
+      state.drawerAction = statu;
+    },
+    updatedCustomBar(state, num) {
+      state.systemInfo.customBar = num;
+    },
+    updatedStatusBar(state, num) {
+      state.systemInfo.statusBar = num;
+    },
+    updatedUserInfo(state, obj) {
+      if (obj.avatarUrl != null && obj.nickName != null) {
+        state.userInfo = obj;
+      }
+    },
+    updatedUserBaseInfo(state, obj) {
+      if (obj.avatarUrl != null && obj.nickName != null) {
+        state.userInfo.avatarUrl = obj.avatarUrl;
+        state.userInfo.nickName = obj.nickName;
+        saveDate("userInfo", state.userInfo, () => { console.log("save userInfo") });
+      }
+    },
   },
   actions: {
   },
   modules: {
   },
   getters: {
+    drawerAction(state) {
+      return state.drawerAction;
+    },
     shoppingCart(state) {
       return state.shoppingCart;
     },
     userInfo(state) {
-      login.do((res,loginRes,infoRes)=>{
-         if(res.statu){
-            console.log("登录并获取数据成功",loginRes,infoRes);
-         }else{
-          uni.showToast({
-            title: '登录失败',
-            duration: 2000
-          });
-          console.warn(res.msg)
-         }
-      })
       return state.userInfo;
+    },
+    userBaseInfo(state) {
+      return {
+        avatarUrl: state.userInfo.avatarUrl,
+        nickName: state.userInfo.nickName
+      }
+    },
+    systemInfo(state) {
+      return state.systemInfo;
+    },
+    nvaHeight(state) {
+      return state.systemInfo.customBar + state.systemInfo.statusBar;
+    },
+    statusBar(state) {
+      return state.systemInfo.statusBar;
+    },
+    showLog(state) {
+      return state.showLog;
     }
-  }
+
+  },
 })
+
+function saveDate(key, data, callback) {
+  uni.setStorage({
+    key: key,
+    data: data,
+    success: function () {
+      if (callback) {
+        callback()
+      }
+    }
+  });
+}
