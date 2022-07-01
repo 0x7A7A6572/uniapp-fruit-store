@@ -11,7 +11,7 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
-                "enablePullDownRefresh": true
+                "enablePullDownRefresh": false
             }
             
         }
