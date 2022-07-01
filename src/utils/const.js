@@ -1,8 +1,9 @@
 /**
  *  存放固定的一些内容,样式
  */
+import defaultLogoImg from "/static/images/logo.png";
 export default {
-    logosrc: "/static/images/logo.png",
+    logosrc: defaultLogoImg,
     //固定的菜单列表
     menuList: [{
         icon: 'cuIcon-like',
@@ -45,5 +46,6 @@ export default {
         offColor: 'white',
         offBg: 'red',
         onBg: 'red'
-    }
+    },
+    orderTab: ["待付款","待发货","待收货","已完成"]
 }
