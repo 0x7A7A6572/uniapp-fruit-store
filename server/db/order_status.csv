@@ -1,0 +1,6 @@
+"status","desc"
+0,Pending payment
+1,to be delivered
+2,Shipped
+3,received
+4,Transaction complete
