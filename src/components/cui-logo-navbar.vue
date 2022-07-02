@@ -62,5 +62,6 @@ export default {
   font-size: 2em;
   color: white;
   padding: 0.5em;
+  padding-top: var(0.5em + 5px);
 }
 </style>

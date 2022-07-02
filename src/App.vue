@@ -60,7 +60,7 @@ export default {
 @import "colorui/icon.css";
 /* 自定义的全局样式*/
 /* @import "index.css"; */
-page,
+page, body,
 view {
   --mainColor: #ff430a;
   --pageBackgroundColor: linear-gradient(45deg, #ff9700, #ed1c24);
