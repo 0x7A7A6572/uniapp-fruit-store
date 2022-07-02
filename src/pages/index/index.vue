@@ -8,9 +8,9 @@
     >
     </cui-float-action-button>
     <cui-float-action-button
-      :action="shoppingCartAction"
-      :actionStyle="shoppingCartFabStyle"
-      :offset="shoppingCartOffset"
+      :action="shopingCartAction"
+      :actionStyle="shopingCartFabStyle"
+      :offset="shopingCartOffset"
     >
       <text class="cuIcon-null cu-tag badge bg-yellow text-xsl">{{
         shoppingCart.goodsList.length
@@ -18,9 +18,14 @@
     </cui-float-action-button>
     <!-- 抽屉主页 -->
     <scroll-view scroll-y class="DrawerPage" :class="getDrawerStatuStyle()">
-      <cui-verticalnav>
-        <!-- 顶部logo -->
-        <cui-logo-navbar :logo="logosrc" @tap="changeDrawer"></cui-logo-navbar>
+      <!-- 顶部logo -->
+      <cui-logo-navbar :logo="logosrc" @tap="changeDrawer"></cui-logo-navbar>
+      <cui-verticalnav
+        :tobuy="tobuy"
+        :itemclick="toGoodsDetails"
+        :goodsClass="goodsClass"
+        :swiperImage="swiperImage"
+      >
       </cui-verticalnav>
       <!-- {{username}} -->
     </scroll-view>
@@ -38,66 +43,119 @@
         </view>
       </cui-user-drawer>
     </scroll-view>
+    <cui-shoping-cart-dialog
+      v-show="shopingCartDialogShow"
+      v-model:show="shopingCartDialogShow"
+      :item="shopingCartItem"
+      :orgiinStock="orgiinStock"
+    />
   </view>
 </template>
 
 <script>
 import { useStore } from "vuex";
-import {ref, onMounted } from "vue"
+import { ref, onMounted } from "vue";
 import CONST from "@/utils/const.js";
+import apiGoods from "@/api/goods.js";
 import cuiVerticalnav from "@/components/cui-verticalnav.vue";
 import cuiFloatActionButton from "@/components/cui-float-action-button.vue";
 import cuiLogoNavbar from "@/components/cui-logo-navbar.vue";
 import cuiUserDrawer from "@/components/cui-user-drawer.vue";
+import cuiShopingCartDialog from "@/components/cui-shoping-cart-dialog.vue";
 export default {
-  components: { cuiVerticalnav, cuiFloatActionButton, cuiLogoNavbar, cuiUserDrawer, useStore,},
-  setup() {
+  components: {
+    cuiVerticalnav,
+    cuiFloatActionButton,
+    cuiLogoNavbar,
+    cuiUserDrawer,
+    cuiShopingCartDialog,
+    useStore,
+  },
+  setup(props, ctx) {
     const store = useStore();
     let userInfo = store.getters.userInfo;
     let menuList = CONST.menuList;
     let logosrc = CONST.logosrc;
+    let goodsClass = ref([]);
+    let swiperImage = ref([]);
     let drawerStatus = ref(false);
     let action = ref(false);
-    let shoppingCartAction = false;
+    let shopingCartItem = ref({});
+    let orgiinStock = ref(0);
+    let shopingCartAction = false;
+    let shopingCartDialogShow = ref(false);
     /* 购物车数据 */
     let shoppingCart = {
       goodsList: [
-        {goodsId: 1,buyCount: 1,},
-        {goodsId: 2, buyCount: 3,},
+        { goodsId: 1, buyCount: 1 },
+        { goodsId: 2, buyCount: 3 },
       ],
     };
     let changeDrawerOffset = CONST.changeDrawerOffset;
-    let shoppingCartOffset = CONST.shoppingCartOffset;
-    let shoppingCartFabStyle = CONST.shoppingCartFabStyle;
+    let shopingCartOffset = CONST.shopingCartOffset;
+    let shopingCartFabStyle = CONST.shopingCartFabStyle;
 
-    function changeDrawer(){
-      // console.log("store.getters.drawerAction",store.getters.drawerAction)
-      // store.commit("updatedDrawerAction", !store.getters.drawerAction);
+    apiGoods.getGoodsList((res) => {
+      console.log("update goodsClass", res.data);
+      goodsClass.value = res.data.goodsClass;
+      swiperImage.value = res.data.swiperImage;
+    });
+
+    function changeDrawer() {
       drawerStatus.value = !drawerStatus.value;
       action.value = !action.value;
     }
 
-    function getDrawerStatuStyle(){
-      let statu = drawerStatus.value ? 'show' : '';
+    function getDrawerStatuStyle() {
+      let statu = drawerStatus.value ? "show" : "";
       return statu;
     }
 
-    onMounted(()=>{
-      setTimeout(()=>{
-        if(drawerStatus.value == false && userInfo.nickName == null){
-           changeDrawer();
+    /**
+     * 打开购买弹窗
+     */
+    function tobuy(item) {
+      console.log("show shoping cart", item.id);
+      shopingCartDialogShow.value = true;
+      shopingCartItem.value = item;
+      orgiinStock.value = item.stock;
+    }
+
+    function toGoodsDetails(item) {
+      console.log("toGoodsDetails", item.id);
+    }
+
+    onMounted(() => {
+      setTimeout(() => {
+        if (drawerStatus.value == false && userInfo.nickName == null) {
+          changeDrawer();
         }
-      },1000)
- 			console.log('----onMounted')
- 		})
+      }, 1000);
+      console.log("----onMounted");
+    });
 
     return {
       userInfo,
-      menuList,logosrc,drawerStatus,
-      action,shoppingCartAction,shoppingCart,changeDrawerOffset,shoppingCartOffset,shoppingCartFabStyle,
-      changeDrawer, getDrawerStatuStyle
+      menuList,
+      logosrc,
+      drawerStatus,
+      shopingCartDialogShow,
+      shopingCartItem,
+      action,
+      shopingCartAction,
+      shoppingCart,
+      changeDrawerOffset,
+      shopingCartOffset,
+      shopingCartFabStyle,
+      goodsClass,
+      swiperImage,
+      orgiinStock,
+      changeDrawer,
+      getDrawerStatuStyle,
+      tobuy,
+      toGoodsDetails
     };
-  }
+  },
 };
 </script>
 
