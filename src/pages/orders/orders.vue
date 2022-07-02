@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view class="order-page">
     <cui-logo-navbar
       class="logo-nav"
       :height="navHeight"
@@ -8,7 +8,7 @@
     >
     </cui-logo-navbar>
 
-    <scroll-view scroll-x class="bg-white nav">
+    <scroll-view scroll-x class="nav">
       <view class="flex text-center">
         <view
           class="cu-item flex-sub"
@@ -64,11 +64,13 @@ export default {
 </script>
 
 <style scope>
+.order-page{
+  background-color: rgb(228, 228, 228);
+  height: 100vh;
+}
 .order-tab {
   display: flex;
   width: 100%;
 }
-.cu-item {
-  /* width: 100%; */
-}
+
 </style>

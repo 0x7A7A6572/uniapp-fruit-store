@@ -1,5 +1,5 @@
 <template>
-  <view class="goods-item">
+  <view class="goods-item" @click="itemclick(item)">
     <img class="goods-item-img" :src="item.image[0]" />
     <view class="goods-item-info">
       <text class="__info-name">{{ item.goodsName }}</text>
@@ -10,7 +10,7 @@
         <text class="__info-price text-xxl">￥{{ item.goodsPrice }}</text>
         <text class="text-grey text-sm">/{{ item.goodsPack }}</text>
       </view>
-      <view class="fit-Round-button">
+      <view class="fit-Round-button" @click.stop="tobuy(item)">
         <text class="__frb-left cuIcon-cart"></text>
         <text class="__frb-right">购买</text>
       </view>
@@ -45,6 +45,8 @@ export default {
   props: {
     item: { type: Object },
     selloutImage: { type: String },
+    tobuy: {type: Function, default: ()=>{console.log("not have click even")}},
+    itemclick: {type: Function, default: ()=>{console.log("not have itemclick even")}}
   },
 };
 </script>
