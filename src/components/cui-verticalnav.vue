@@ -1,6 +1,6 @@
 <template>
   <view class="goods-show">
-    <!-- <slot></slot> -->
+    <!-- 轮播图 -->
     <swiper
       class="screen-swiper round-dot"
       :indicator-dots="true"
@@ -13,7 +13,11 @@
         <image :src="item" mode="aspectFill"></image>
       </swiper-item>
     </swiper>
-    <view class="cuIcon-notification notify-bar">{{ notice_text }}</view>
+    <!-- 公告通知 -->
+    <view class="cuIcon-notification notify-bar">{{ notice }}</view>
+    <!-- 福利专区 -->
+    <welfare-zone></welfare-zone>
+    <!-- 商品列表 -->
     <view class="VerticalBox">
       <scroll-view
         :hidden="goodsClass.length <= 1"
@@ -55,7 +59,12 @@
               v-for="(_item, _index) in item.classGoods"
               :key="_index"
             >
-              <cui-goods-item :item="_item" :selloutImage="selloutImage" :tobuy="tobuy" :itemclick="itemclick"></cui-goods-item>
+              <cui-goods-item
+                :item="_item"
+                :selloutImage="selloutImage"
+                :tobuy="tobuy"
+                :itemclick="itemclick"
+              ></cui-goods-item>
             </view>
           </view>
         </view>
@@ -67,23 +76,23 @@
 </template>
 
 <script>
-import CONST from "@/utils/const.js";
 import cuiGoodsItem from "@/components/cui-goods-item.vue";
 import selloutImage from "@/static/images/sellout.png";
+import welfareZone from "@/components/welfare-zone.vue";
 export default {
   name: "cui-vertivalnav",
-  components: { cuiGoodsItem },
-  props: {tobuy:{type: Function}, 
-          itemclick:{type: Function},
-          swiperImage: {type: Array},
-          goodsClass: {type: Array}},
+  components: { cuiGoodsItem, welfareZone },
+  props: {
+    tobuy: { type: Function },
+    itemclick: { type: Function },
+    swiperImage: { type: Array },
+    goodsClass: { type: Array },
+    notice: String
+  },
   data() {
     return {
       tabCur: 0,
       selloutImage: selloutImage,
-      notice_text: "当前非成熟季节，感谢您的关注，如需预定请联系xxxxxxxxx",
-      // swiperImage: CONST.swiperImage,
-      // goodsClass: CONST.goodsClass,
       list: [],
       tabCur: 0,
       mainCur: 0,
