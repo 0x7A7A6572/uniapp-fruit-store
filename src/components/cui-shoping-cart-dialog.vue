@@ -26,16 +26,16 @@
           <!-- 主容器 -->
           <view class="stepper">
             <!-- 减号 -->
-            <text :class="'sign ' + (count < 2 ? 'disabled' : 'normal')" @tap="delCount"
-              >-</text
+            <button :class="'sign ' + (count < 2 ? 'disabled' : 'normal')" @click="delCount"
+              >-</button
             >
             <!-- 数值 -->
             <input class="number" type="number" :value="count" disabled="disabled" />
             <!-- 加号 -->
-            <text
+            <button
               :class="'sign ' + (count > orgiinStock ? 'disabled' : 'normal')"
-              @tap="addCount"
-              >+</text
+              @click="addCount"
+              >+</button
             >
           </view>
         </view>
@@ -93,11 +93,7 @@ export default {
     }
 
     function getItemImage(item) {
-      if (Array.isArray(item.image)) {
-        return item.image[0];
-      } else {
-        return item.image;
-      }
+        return item.imgMain;
     }
 
     return {
@@ -117,9 +113,12 @@ export default {
 <style>
 /*主容器*/
 .stepper {
-  width: 90px;
+  /* width: 90px; */
   height: 26px;
   margin: 0 auto;
+}
+button.sign::after{
+  content: none;
 }
 
 /*加号和减号*/
@@ -131,6 +130,7 @@ export default {
   float: left;
   font-size: larger;
   border-radius: 0.2em;
+  padding: inherit;
 }
 
 /*数值*/
