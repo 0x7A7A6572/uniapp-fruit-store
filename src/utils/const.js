@@ -18,17 +18,17 @@ export default {
   {
     icon: 'cuIcon-location',
     text: '地址管理',
-    pageUrl: "addrManage",
+    pageUrl: "addrAdmin",
   },
   {
     icon: 'cuIcon-ticket',
     text: '优惠券',
-    pageUrl: "addrManage",
+    pageUrl: "coupon",
   },
   {
     icon: 'cuIcon-creative',
     text: '建议反馈',
-    pageUrl: "suggest",
+    pageUrl: "feedback",
   },
   {
     icon: 'cuIcon-question',

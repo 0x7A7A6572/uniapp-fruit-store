@@ -25,6 +25,7 @@
         :itemclick="toGoodsDetails"
         :goodsClass="goodsClass"
         :swiperImage="swiperImage"
+        :notice="notice"
       >
       </cui-verticalnav>
       <!-- {{username}} -->
@@ -76,8 +77,11 @@ export default {
     let userInfo = store.getters.userInfo;
     let menuList = CONST.menuList;
     let logosrc = CONST.logosrc;
+    /** 基本信息 */
     let goodsClass = ref([]);
     let swiperImage = ref([]);
+    let notice = ref("");
+
     let drawerStatus = ref(false);
     let action = ref(false);
     let shopingCartItem = ref({});
@@ -99,6 +103,8 @@ export default {
       console.log("update goodsClass", res.data);
       goodsClass.value = res.data.goodsClass;
       swiperImage.value = res.data.swiperImage;
+      notice.value = res.data.notice;
+      store.commit("updateGoodsClass",res.data.goodsClass);
     });
 
     function changeDrawer() {
@@ -111,18 +117,19 @@ export default {
       return statu;
     }
 
-    /**
-     * 打开购买弹窗
-     */
+    /** 打开购买弹窗 */
     function tobuy(item) {
       console.log("show shoping cart", item.id);
       shopingCartDialogShow.value = true;
       shopingCartItem.value = item;
       orgiinStock.value = item.stock;
     }
-
+    /** 打开商品详情页面 */
     function toGoodsDetails(item) {
-      console.log("toGoodsDetails", item.id);
+      console.log("NavChange -> toGoodsDetails", item.id);
+      uni.navigateTo({
+        url: "/pages/goodsDetails/goodsDetails?id=" + item.id,
+      });
     }
 
     onMounted(() => {
@@ -149,11 +156,12 @@ export default {
       shopingCartFabStyle,
       goodsClass,
       swiperImage,
+      notice,
       orgiinStock,
       changeDrawer,
       getDrawerStatuStyle,
       tobuy,
-      toGoodsDetails
+      toGoodsDetails,
     };
   },
 };

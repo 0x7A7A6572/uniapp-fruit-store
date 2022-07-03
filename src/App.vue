@@ -67,4 +67,6 @@ view {
   --navBackgroundColor: linear-gradient(180deg, #ff9700, #ff970000);
   --disableTextColor: grey;
 }
+
+
 </style>

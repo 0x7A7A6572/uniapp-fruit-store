@@ -1,10 +1,10 @@
 import { createStore } from 'vuex';
-// import login from '../api/login';
 export default createStore({
   //需要共享的组件状态
   state: {
     showLog: false,
     drawerAction: true,
+    goodsClass: [],
     shoppingCart: {
       goodsList: [{
         goodsId: 1,
@@ -62,6 +62,13 @@ export default createStore({
         saveDate("userInfo", state.userInfo, () => { console.log("save userInfo") });
       }
     },
+    updateGoodsClass(state, array){
+      if(Array.isArray(array) && array[0].className != null){
+        state.goodsClass = array;
+      }else{
+        console.error("updateGoodsClass error",array);
+      }
+    }
   },
   actions: {
   },
@@ -94,11 +101,19 @@ export default createStore({
     },
     showLog(state) {
       return state.showLog;
+    },
+    goodsClass(state){
+      return state.goodsClass;
+    },
+    goodsListById(state){
+      return function(id){
+        return getGoodsListById(state.goodsClass, id);
+      }
     }
-
   },
 })
 
+/** 保存数据到本地 */
 function saveDate(key, data, callback) {
   uni.setStorage({
     key: key,
@@ -109,4 +124,16 @@ function saveDate(key, data, callback) {
       }
     }
   });
+}
+
+/** id查询商品详情 */
+function getGoodsListById(goodsClass, id){
+  for(let index in goodsClass){
+    for(let _index in goodsClass[index].classGoods){
+      if(goodsClass[index].classGoods[_index].id == id){
+        return goodsClass[index].classGoods[_index];
+      }
+    }
+  }
+  return null;
 }

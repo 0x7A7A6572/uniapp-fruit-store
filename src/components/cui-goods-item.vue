@@ -1,6 +1,6 @@
 <template>
   <view class="goods-item" @click="itemclick(item)">
-    <img class="goods-item-img" :src="item.image[0]" />
+    <img class="goods-item-img" :src="item.imgMain" />
     <view class="goods-item-info">
       <text class="__info-name">{{ item.goodsName }}</text>
       <text :class="['__info-state', getInfoStateStyle(item.state)]">{{
