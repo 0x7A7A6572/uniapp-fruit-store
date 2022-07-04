@@ -61,9 +61,9 @@ export default {
         let userinfo = uni.getStorageSync("userInfo");
         if (userinfo) {
           console.log("toLogin >userinfo:",userinfo)
-          // login.do((res) => {
-          //   console.log(">>>>", res);
-          // });
+          login.do((res) => {
+            console.log(">>>>", res);
+          });
           store.commit("updatedUserBaseInfo", {
             avatarUrl: userinfo.avatarUrl,
             nickName: userinfo.nickName,
@@ -71,6 +71,10 @@ export default {
         } else {
           login.do((res) => {
             console.log(">>>>", res);
+            store.commit("updatedUserBaseInfo", {
+              avatarUrl: res.userInfo.avatarUrl,
+              nickName: res.userInfo.nickName,
+            });
           });
           login.getUserProfile((res) => {
             console.log("getUserProfile", res);
@@ -101,8 +105,8 @@ export default {
     userInfo: {
       type: Object,
       default: {
-        type: "admin",
-        vip: true,
+        type: "",
+        vip: false,
         avatarUrl: "/static/images/avatar.png",
         nickName: "未登录",
         loveGoods: "暂无喜欢的商品",
@@ -111,12 +115,8 @@ export default {
             orderId: "订单id",
             orderStatu: "订单状态",
             waybillNumber: "KD0000000000000",
-            goodsList: [
-              {
-                goodsId: 1,
-                buyCount: 1,
-              },
-            ],
+            goodsId: 1,
+            buyCount: 1,
           },
         ],
         adds: [
