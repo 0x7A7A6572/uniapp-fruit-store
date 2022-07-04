@@ -24,19 +24,19 @@ export default {
     uni.getStorage({
       key: "userInfo",
       success: (res) => {
-        console.log("read localstorage userdata success>",res);
+        console.log("read localstorage userdata success>", res);
         store.commit("updatedUserBaseInfo", {
           avatarUrl: res.data.avatarUrl,
           nickName: res.data.nickName,
         });
-        setTimeout(()=>{
-        //  store.commit("updatedDrawerAction",false);
+        setTimeout(() => {
+          //  store.commit("updatedDrawerAction",false);
           uni.showToast({
-            title: '欢迎回来' + res.data.nickName,
+            title: "欢迎回来" + res.data.nickName,
             duration: 1000,
-            icon: "none"
+            icon: "none",
           });
-        },1500)
+        }, 1500);
       },
       fail: (fail) => {
         console.log("localstorage not have userdata>");
@@ -60,13 +60,14 @@ export default {
 @import "colorui/icon.css";
 /* 自定义的全局样式*/
 /* @import "index.css"; */
-page, body,
+:root,page,
+body,
 view {
   --mainColor: #ff430a;
   --pageBackgroundColor: linear-gradient(45deg, #ff9700, #ed1c24);
   --navBackgroundColor: linear-gradient(180deg, #ff9700, #ff970000);
   --disableTextColor: grey;
+  --oakyButton: linear-gradient(45deg, #ffffffff, #ffffff, #ffffff, #ffffff, #009efa);
+  --okayColor: #ffffff;
 }
-
-
 </style>

@@ -1,12 +1,13 @@
 <template>
   <view
     class="cui-log-nav"
-    :style="{ height: height + 'px', paddingTop: statusBarHeight + 'px' }"
+    :style="{ height: height + 'px', paddingTop: statusBarHeight + 5 + 'px' }"
   >
     <text v-if="isBack" class="cuIcon-back navbar-func" @tap="BackPage"></text>
+    <!-- <text v-if="isBack" class="text-xl text-white text-bold">{{ title }}</text> -->
     <image v-if="logo != null" class="logo margin-top-xl" :src="logo" mode="heightFix">
     </image>
-	<slot  class="navbar-func"></slot>
+    <slot class="navbar-func"></slot>
   </view>
 </template>
 
@@ -17,6 +18,7 @@ export default {
     return {};
   },
   props: {
+    title: String,
     logo: {
       type: String,
     },
@@ -44,9 +46,12 @@ export default {
 
 <style>
 .cui-log-nav {
+  position: fixed;
+  top: 0;
   width: 100vw;
   z-index: 1;
   background: linear-gradient(180deg, #ff9700, #ff970000);
+  text-align: left;
   /* height: 60px; */
   /* padding: 0.5em; */
   /* padding-top: var(--status-bar-height); */
@@ -62,6 +67,5 @@ export default {
   font-size: 2em;
   color: white;
   padding: 0.5em;
-  padding-top: var(0.5em + 5px);
 }
 </style>

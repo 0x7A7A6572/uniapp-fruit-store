@@ -16,10 +16,10 @@
 </template>
 
 <script>
-import img_gift from "@/static/images/gift.png";
+// import img_gift from "@/static/images/gift.png";
 export default {
   name: "welfare-zone",
-  components: { img_gift },
+  // components: { img_gift },
   setup() {
     function goWelfarePage() {
       console.log("NavChange -> welfare");
@@ -46,9 +46,11 @@ export default {
 <style scope>
 .layout-welfare-zone {
   display: flex;
+  z-index: 1;
 }
 .welfare-zone {
   position: relative;
+  min-height: 6em;
   height: 100px;
   width: 50%;
   display: flex;
@@ -62,12 +64,14 @@ export default {
   font-size: larger;
   /* color: red; */
   padding: 10px;
+    z-index: 1;
 }
 .__desc {
   margin-top: -5px;
   padding: 0px 10px;
   /* color: red; */
   font-size: smaller;
+    z-index: 1;
 }
 .__go {
   padding: 2px 5px;
@@ -76,14 +80,15 @@ export default {
   /* background-color: red; */
   color: white;
   border-radius: 10px;
+    z-index: 1;
 }
 .__bg {
   position: absolute;
   right: 5px;
   transform: rotate(350deg);
   bottom: 5px;
-  width: 64px;
-  height: 64px;
+  width: 15vw;
+  height: 15vw;
 }
 .__bg:hover {
   transform: rotate(360deg);

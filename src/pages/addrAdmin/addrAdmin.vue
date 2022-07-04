@@ -7,6 +7,7 @@
       :isBack="true"
     >
     </cui-logo-navbar>
+
   </view>
 </template>
 

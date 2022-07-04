@@ -20,15 +20,19 @@
     <scroll-view scroll-y class="DrawerPage" :class="getDrawerStatuStyle()">
       <!-- 顶部logo -->
       <cui-logo-navbar :logo="logosrc" @tap="changeDrawer"></cui-logo-navbar>
+      <!-- 轮播图 -->
+      <cui-rotation-chart :swiperImage="swiperImage"></cui-rotation-chart>
+      <!-- 公告通知 -->
+      <view class="cuIcon-notification notify-bar">{{ notice }}</view>
+      <!-- 福利专区 -->
+      <welfare-zone></welfare-zone>
+      <!-- 商品展示 -->
       <cui-verticalnav
         :tobuy="tobuy"
         :itemclick="toGoodsDetails"
         :goodsClass="goodsClass"
-        :swiperImage="swiperImage"
-        :notice="notice"
       >
       </cui-verticalnav>
-      <!-- {{username}} -->
     </scroll-view>
     <!-- 点击抽屉外关闭抽屉 -->
     <view class="DrawerClose" :class="getDrawerStatuStyle()" @click="changeDrawer">
@@ -36,7 +40,7 @@
     <!-- 抽屉内 -->
     <scroll-view scroll-y class="DrawerWindow" :class="getDrawerStatuStyle()">
       <cui-user-drawer :menuList="menuList" :userInfo="userInfo">
-        <view v-if="userInfo.type == 'admin'" class="cu-item arrow" bindtap="toAdmin">
+        <view v-if="userInfo.type == 'admin'" class="cu-item arrow" @click="toAdmin">
           <view class="content">
             <text class="cuIcon-crownfill text-yellow"></text>
             <text class="text-yellow">后台数据管理</text>
@@ -63,6 +67,8 @@ import cuiFloatActionButton from "@/components/cui-float-action-button.vue";
 import cuiLogoNavbar from "@/components/cui-logo-navbar.vue";
 import cuiUserDrawer from "@/components/cui-user-drawer.vue";
 import cuiShopingCartDialog from "@/components/cui-shoping-cart-dialog.vue";
+import cuiRotationChart from "@/components/cui-rotation-chart.vue";
+import welfareZone from "@/components/welfare-zone.vue";
 export default {
   components: {
     cuiVerticalnav,
@@ -70,6 +76,8 @@ export default {
     cuiLogoNavbar,
     cuiUserDrawer,
     cuiShopingCartDialog,
+    cuiRotationChart,
+    welfareZone,
     useStore,
   },
   setup(props, ctx) {
@@ -104,7 +112,7 @@ export default {
       goodsClass.value = res.data.goodsClass;
       swiperImage.value = res.data.swiperImage;
       notice.value = res.data.notice;
-      store.commit("updateGoodsClass",res.data.goodsClass);
+      store.commit("updateGoodsClass", res.data.goodsClass);
     });
 
     function changeDrawer() {
@@ -129,6 +137,14 @@ export default {
       console.log("NavChange -> toGoodsDetails", item.id);
       uni.navigateTo({
         url: "/pages/goodsDetails/goodsDetails?id=" + item.id,
+      });
+    }
+
+    /** 后台管理页面 */
+    function toAdmin() {
+      console.log("NavChange -> toAdmin");
+      uni.navigateTo({
+        url: "/pages/admin/admin"
       });
     }
 
@@ -160,7 +176,7 @@ export default {
       orgiinStock,
       changeDrawer,
       getDrawerStatuStyle,
-      tobuy,
+      tobuy,toAdmin,
       toGoodsDetails,
     };
   },
@@ -199,6 +215,7 @@ page {
   height: 100vh;
   left: 0vw;
   transition: all 0.4s;
+  background-color: #eee;
 }
 
 .DrawerPage.show {
@@ -415,5 +432,12 @@ page {
   align-items: center;
   min-height: 100rpx;
   justify-content: space-between;
+}
+
+.notify-bar {
+  background-color: bisque;
+  color: orangered;
+  padding: 0.5em;
+  white-space: nowrap;
 }
 </style>

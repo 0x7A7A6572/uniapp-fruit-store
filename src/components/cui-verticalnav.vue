@@ -1,22 +1,5 @@
 <template>
   <view class="goods-show">
-    <!-- 轮播图 -->
-    <swiper
-      class="screen-swiper round-dot"
-      :indicator-dots="true"
-      :circular="true"
-      :autoplay="true"
-      interval="5000"
-      duration="500"
-    >
-      <swiper-item v-for="(item, index) in swiperImage" :key="index">
-        <image :src="item" mode="aspectFill"></image>
-      </swiper-item>
-    </swiper>
-    <!-- 公告通知 -->
-    <view class="cuIcon-notification notify-bar">{{ notice }}</view>
-    <!-- 福利专区 -->
-    <welfare-zone></welfare-zone>
     <!-- 商品列表 -->
     <view class="VerticalBox">
       <scroll-view
@@ -78,16 +61,13 @@
 <script>
 import cuiGoodsItem from "@/components/cui-goods-item.vue";
 import selloutImage from "@/static/images/sellout.png";
-import welfareZone from "@/components/welfare-zone.vue";
 export default {
   name: "cui-vertivalnav",
-  components: { cuiGoodsItem, welfareZone },
+  components: { cuiGoodsItem },
   props: {
     tobuy: { type: Function },
     itemclick: { type: Function },
-    swiperImage: { type: Array },
     goodsClass: { type: Array },
-    notice: String
   },
   data() {
     return {
@@ -205,12 +185,7 @@ export default {
   background-color: #f1f1f1;
   flex: 1;
 }
-.notify-bar {
-  background-color: bisque;
-  color: orangered;
-  padding: 0.5em;
-  white-space: nowrap;
-}
+
 .goods-show {
   background-color: white;
 }
