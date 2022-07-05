@@ -1,4 +1,4 @@
-const GET_USER_INFO = "https://service.zzerx.cn";
+// const GET_USER_INFO = "https://service.zzerx.cn";
 const mock_login = "https://mock.presstime.cn/mock/62c00f334d5d85005785f7c8/friutStore/login";
 export default {
 	do: function (callback,showLog) {

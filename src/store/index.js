@@ -24,7 +24,7 @@ export default createStore({
       avatarUrl: '/static/images/avatar.png', /* 用户头像 */
       nickName: '未登录',
       loveGoods: '暂无喜欢的商品',
-      oderrs: [{
+      oders: [{
         orderId: "订单id",
         orderStatu: "订单状态",
         waybillNumber: "KD0000000000000",
@@ -32,6 +32,13 @@ export default createStore({
           goodsId: 1,
           buyCount: 1
         }]
+      }],
+      addrs: [{
+        name: "姓名",
+        phone: "电话",
+        region: ["广东省", "广州市", "海珠区"],
+        address: "详细地址",
+        isDefault: false
       }]
     },
     systemInfo: {
@@ -51,8 +58,19 @@ export default createStore({
       state.systemInfo.statusBar = num;
     },
     updatedUserInfo(state, obj) {
-      if (obj.avatarUrl != null && obj.nickName != null) {
-        state.userInfo = obj;
+      if (obj.id != null && obj.id != "") {
+        // state.userInfo = obj;
+        state.userInfo.id = obj.id;
+        state.userInfo.type = obj.type;
+        state.userInfo.vip = obj.vip;
+        // mock只简单设置了get 所以把名字头像和用户数据分开了，get的是同一个用户
+        // state.userInfo.avatarUrl = obj.avatarUrl;
+        // state.userInfo.nickName = obj.nickName;
+        state.userInfo.oders = obj.oders;
+        state.userInfo.addrs = obj.addrs;
+        state.userInfo.msgs = obj.msgs;
+        state.userInfo.shoppingCart = obj.shoppingCart;    
+        saveDate("userInfo", state.userInfo, () => { console.log("save userInfo") }); 
       }
     },
     updatedUserBaseInfo(state, obj) {
@@ -60,6 +78,18 @@ export default createStore({
         state.userInfo.avatarUrl = obj.avatarUrl;
         state.userInfo.nickName = obj.nickName;
         saveDate("userInfo", state.userInfo, () => { console.log("save userInfo") });
+      }
+    },
+    updateAddrs(state, addrs){
+      if(Array.isArray(addrs))
+      state.userInfo.addrs = addrs;
+    },
+    updateAddrIndex(state, editor){
+      state.userInfo.addrs[editor.index] = editor.addr;
+    },
+    pushAddr(state, addr){
+      if(typeof addr == "object"){
+        checkPutAddrs(state.userInfo.addrs,addr);
       }
     },
     updateGoodsClass(state, array){
@@ -89,6 +119,12 @@ export default createStore({
         avatarUrl: state.userInfo.avatarUrl,
         nickName: state.userInfo.nickName
       }
+    },
+    addrs(state){
+      return state.userInfo.addrs;
+    },
+    defaultAddr(state){
+      return getDefaultAddr(state.userInfo.addrs);
     },
     systemInfo(state) {
       return state.systemInfo;
@@ -136,4 +172,26 @@ function getGoodsListById(goodsClass, id){
     }
   }
   return null;
+}
+
+/** 检查是否更改默认地址 */
+function checkPutAddrs(addrs, addr){
+  if(addr.isDefault){
+    for(let index in addrs){
+      if(addrs[index].isDefault){
+        addrs[index].isDefault = false;
+      }
+    }
+  }
+  addrs.push(addr);
+}
+
+/** 获取默认地址 */
+function getDefaultAddr(addrs){
+  for(let index in addrs){
+    if(addrs[index].isDefault){
+      return addrs[index];
+    }
+  }
+  return addrs[0]
 }

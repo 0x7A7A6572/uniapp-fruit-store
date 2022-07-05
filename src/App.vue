@@ -1,5 +1,6 @@
 <script>
 import { useStore } from "vuex";
+import login from "@/api/login";
 export default {
   onLaunch: function () {
     const store = useStore();
@@ -28,6 +29,10 @@ export default {
         store.commit("updatedUserBaseInfo", {
           avatarUrl: res.data.avatarUrl,
           nickName: res.data.nickName,
+        });
+        login.do((res) => {
+          console.log("登录成功->", res);
+          store.commit("updatedUserInfo", res.data);
         });
         setTimeout(() => {
           //  store.commit("updatedDrawerAction",false);
@@ -60,7 +65,8 @@ export default {
 @import "colorui/icon.css";
 /* 自定义的全局样式*/
 /* @import "index.css"; */
-:root,page,
+:root,
+page,
 body,
 view {
   --mainColor: #ff430a;

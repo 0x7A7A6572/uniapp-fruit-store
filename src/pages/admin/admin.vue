@@ -50,7 +50,7 @@
         </view>
       </view>
     </view>
-
+  <!-- 手动添加订单弹窗 -->
     <view :class="['cu-modal', 'bottom-modal', modalName == 'bottomModal' ? 'show' : '']">
       <view class="cu-dialog">
         <view class="cu-bar bg-white">
@@ -85,8 +85,8 @@
           <view class="cu-form-group">
             <view class="title text-bold">地址选择</view>
             <picker
-              :mode="region"
-              bindchange="RegionChange"
+              mode="region"
+              @change="RegionChange"
               :value="region"
               :custom-item="customItem"
             >
@@ -247,7 +247,7 @@ export default {
       "remarks": ""
     }];
     let modalName = ref("");
-    let region = ref([]);
+    let region = ref(["广西省","南宁市","江南区"]);
     let copyText = ref("");
 
     function RegionChange(e) {

@@ -154,6 +154,9 @@ export default {
           changeDrawer();
         }
       }, 1000);
+      if(userInfo.nickName != null){
+        //已登录
+      }
       console.log("----onMounted");
     });
 
