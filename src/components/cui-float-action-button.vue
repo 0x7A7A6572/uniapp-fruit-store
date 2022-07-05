@@ -11,9 +11,6 @@
 <script>
 export default {
   name: "cui-float-action-button",
-  data() {
-    return {};
-  },
   computed: {
     getFabBackgroundColor() {
       return this.action ? this.actionStyle.onBg : this.actionStyle.offBg;
