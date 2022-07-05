@@ -47,6 +47,7 @@ export default {
 .layout-welfare-zone {
   display: flex;
   z-index: 1;
+  background-color: white;
 }
 .welfare-zone {
   position: relative;
