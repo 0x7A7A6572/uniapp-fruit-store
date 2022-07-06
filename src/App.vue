@@ -15,6 +15,10 @@ export default {
         const custom = wx.getMenuButtonBoundingClientRect();
         customBar = custom.bottom + custom.top - e.statusBarHeight;
         // #endif
+        // #ifdef H5
+        statusBar = 15;
+        customBar = 50;
+        // #endif
         console.log("customBar:", customBar, " statusBar:", statusBar);
         store.commit("updatedCustomBar", customBar);
         store.commit("updatedStatusBar", statusBar);

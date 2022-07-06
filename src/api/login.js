@@ -1,26 +1,26 @@
 // const GET_USER_INFO = "https://service.zzerx.cn";
 const mock_login = "https://mock.presstime.cn/mock/62c00f334d5d85005785f7c8/friutStore/login";
 export default {
-	do: function (callback,showLog) {
+	do: function (callback, showLog) {
 		uni.login({
 			provider: 'weixin',
 			success: function (loginRes) {
-				if(showLog){
-				console.log("login code:",loginRes.code);
+				if (showLog) {
+					console.log("login code:", loginRes.code);
 				}
 				uni.request({
-					url: mock_login, 
+					url: mock_login,
 					header: {
-						'Content-Type': 'application/x-www-form-urlencoded'  
-					 }, 
-					 data: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					data: {
 						type: "fruitStore-login",
 						code: loginRes.code,
 						client: "@uniapp/mp-weixin"
 					},
 					method: "GET",
 					success: (res) => {
-						console.log("GET success:",res.data);
+						console.log("GET success:", res.data);
 						callback(res.data)
 					}
 				});
@@ -44,11 +44,24 @@ export default {
 				// });
 			},
 			fail: function () {
-				callback({ statu: false, msg: "uni.login fail" });
+				//callback({ statu: false, msg: "uni.login fail" });
+				/** 用于h5预览数据 */
+				uni.request({
+					url: mock_login,
+					header: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					method: "GET",
+					success: (res) => {
+						console.log("GET success:", res.data);
+						callback(res.data)
+					}
+				});
+				/** 用于h5预览数据 end */
 			}
 		});
 	},
-	getUserProfile: function (callback,showLog) {
+	getUserProfile: function (callback, showLog) {
 		uni.getUserProfile({
 			desc: "登录后可同步数据",
 			lang: "zh_CN",
@@ -62,8 +75,8 @@ export default {
 					icon: "error",
 					duration: 1000,
 				});
-				if(showLog){
-				console.log("getUserProfile fail:", fail);
+				if (showLog) {
+					console.log("getUserProfile fail:", fail);
 				}
 				callback(fail);
 			},
