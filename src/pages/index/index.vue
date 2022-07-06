@@ -48,11 +48,14 @@
         </view>
       </cui-user-drawer>
     </scroll-view>
+    <!-- 点击购物后出现的弹窗 -->
     <cui-shoping-cart-dialog
       v-show="shopingCartDialogShow"
       v-model:show="shopingCartDialogShow"
       :item="shopingCartItem"
       :orgiinStock="orgiinStock"
+      :onSelectCouponClick="onSelectCouponClick"
+      :onSelectAddrClick="onSelectAddrClick"
     />
   </view>
 </template>
@@ -96,6 +99,12 @@ export default {
     let orgiinStock = ref(0);
     let shopingCartAction = false;
     let shopingCartDialogShow = ref(false);
+
+    /** dialog选择优惠券和地址时返回的对象 */
+    // let SelectCoupon = ref({});
+    // let SelectAddr = ref({});
+
+
     /* 购物车数据 */
     let shoppingCart = {
       goodsList: [
@@ -144,7 +153,21 @@ export default {
     function toAdmin() {
       console.log("NavChange -> toAdmin");
       uni.navigateTo({
-        url: "/pages/admin/admin"
+        url: "/pages/admin/admin",
+      });
+    }
+       /* 选择优惠券 */
+    function onSelectCouponClick() {
+      console.log("i ckick SelectCoupon");
+      uni.navigateTo({
+        url: "/pages/coupon/coupon?msg=onSelectCouponClick",
+      });
+    }
+       /* 选择发货地址 */
+    function onSelectAddrClick() {
+      console.log("i ckick SelectAddr");
+       uni.navigateTo({
+        url: "/pages/addrAdmin/addrAdmin?msg=onSelectAddrClick",
       });
     }
 
@@ -154,7 +177,7 @@ export default {
           changeDrawer();
         }
       }, 1000);
-      if(userInfo.nickName != null){
+      if (userInfo.nickName != null) {
         //已登录
       }
       console.log("----onMounted");
@@ -179,8 +202,13 @@ export default {
       orgiinStock,
       changeDrawer,
       getDrawerStatuStyle,
-      tobuy,toAdmin,
+      tobuy,
+      toAdmin,
       toGoodsDetails,
+      onSelectCouponClick,
+      onSelectAddrClick,
+      // SelectCoupon,
+      // SelectAddr
     };
   },
 };

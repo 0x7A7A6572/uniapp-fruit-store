@@ -2,6 +2,8 @@ import { createStore } from 'vuex';
 export default createStore({
   //需要共享的组件状态
   state: {
+    SelectCoupon: {}, //当前选择的优惠券
+    SelectAddr: {},  //当前选择的地址
     showLog: false,
     drawerAction: true,
     goodsClass: [],
@@ -97,7 +99,14 @@ export default createStore({
       }else{
         console.error("updateGoodsClass error",array);
       }
-    }
+    },
+    updateSelectAddr(state, addr){
+      state.SelectAddr = addr;
+    },
+    updateSelectCoupon(state, coupon){
+      console.log("store update coupon:", coupon)
+      state.SelectCoupon = coupon;
+    },
   },
   actions: {
   },
@@ -154,6 +163,12 @@ export default createStore({
       return function(id){
         return getGoodsListById(state.goodsClass, id);
       }
+    },
+    SelectCoupon(state){
+      return state.SelectCoupon;
+    },
+    SelectAddr(state){
+      return state.SelectAddr;
     }
   },
 })

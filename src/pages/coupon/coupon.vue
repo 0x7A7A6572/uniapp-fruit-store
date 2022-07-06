@@ -8,18 +8,23 @@
     >
     </cui-logo-navbar>
     <view class="coupon_list" :style="{ paddingTop: navHeight + 'px' }">
-      <view v-for="item in coupons" class="coupon_item" :key="item">
+      <view
+        v-for="item in coupons"
+        class="coupon_item"
+        :key="item"
+        @click.stop="couponClick(item)"
+      >
         <view class="l-tickets">
           <view>
             <text class="title">优惠券</text><br />
-            <text style="font-size: 16px">满{{item.fillPrice}}元使用</text>
+            <text style="font-size: 16px">满{{ item.fillPrice }}元使用</text>
           </view>
-          <view class="price">{{item.couponPrice}}</view>
+          <view class="price">{{ item.couponPrice }}</view>
         </view>
         <view class="r-tickets validTime">
-            {{item.couponStart}}
-            <view> - </view>
-            {{item.couponEnd}}
+          {{ item.couponStart }}
+          <view> - </view>
+          {{ item.couponEnd }}
         </view>
       </view>
     </view>
@@ -27,15 +32,35 @@
 </template>
 
 <script>
+import { onLoad } from "@dcloudio/uni-app";
 import cuiLogoNavbar from "@/components/cui-logo-navbar.vue";
 import { useStore } from "vuex";
+import { ref } from "vue";
 export default {
   components: { cuiLogoNavbar },
   setup() {
     const store = useStore();
     let coupons = store.getters.coupons;
+    let isSelectMode = ref(false);
+
+    onLoad((options) => {
+      console.log("上一个界面传过来的值：", options);
+      if (options.msg == "onSelectCouponClick") {
+        isSelectMode.value = true;
+      }
+    });
+
+    function couponClick(coupon) {
+      if (isSelectMode) {
+        console.log("选择了优惠券：",coupon);
+        store.commit("updateSelectCoupon", coupon);
+        uni.navigateBack();
+      }
+    }
+
     return {
       coupons,
+      couponClick,
       navHeight: useStore().getters.nvaHeight,
       statusBarHeight: useStore().getters.statusBar,
     };
@@ -77,9 +102,14 @@ export default {
         rgb(255, 100, 39) 100%
       )
       right top / 100% 50% no-repeat,
-    radial-gradient(circle at right bottom, transparent 16rpx, red 0, rgb(255, 100, 39) 100%)
+    radial-gradient(
+        circle at right bottom,
+        transparent 16rpx,
+        red 0,
+        rgb(255, 100, 39) 100%
+      )
       right bottom / 100% 50% no-repeat;
-      filter: drop-shadow(-3px 0 3px rgba(255, 100, 0, 0.8));
+  filter: drop-shadow(-3px 0 3px rgba(255, 100, 0, 0.8));
   display: flex;
   /* flex-direction: column; */
   color: rgb(255, 230, 0);
@@ -92,8 +122,8 @@ export default {
   width: 8rpx;
   top: 0;
   left: -8rpx;
-  background: radial-gradient(circle at left center, transparent 8rpx, red 0) left
-    center / 8rpx 20rpx;
+  background: radial-gradient(circle at left center, transparent 8rpx, red 0) left center /
+    8rpx 20rpx;
 }
 .r-tickets {
   flex: 1;
@@ -105,9 +135,14 @@ export default {
         red 100%
       )
       right top / 100% 50% no-repeat,
-    radial-gradient(circle at left bottom, transparent 16rpx, rgb(255, 100, 100) 0, red 100%)
+    radial-gradient(
+        circle at left bottom,
+        transparent 16rpx,
+        rgb(255, 100, 100) 0,
+        red 100%
+      )
       right bottom / 100% 50% no-repeat;
-      filter: drop-shadow(-3px 0 3px rgba(255, 100, 0, 0.8));
+  filter: drop-shadow(-3px 0 3px rgba(255, 100, 0, 0.8));
   padding: 10px;
 }
 .r-tickets::before {
@@ -164,8 +199,8 @@ export default {
   font-size: 60px;
   margin: auto;
 }
-.price::before{
- content: "￥";
- margin-right: -10px;
+.price::before {
+  content: "￥";
+  margin-right: -10px;
 }
 </style>

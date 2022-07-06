@@ -2,12 +2,7 @@
   <view class="dialog__layout">
     <view class="dialog__mask" @click="toggleDialog()" />
     <view class="dialog__container">
-      <icon
-        class="image-close"
-        @click="toggleDialog()"
-        type="cancel"
-        size="25"
-      />
+      <icon class="image-close" @click="toggleDialog()" type="cancel" size="25" />
       <view class="row text-bold">
         <image class="image-sku" :src="getItemImage(item)"> </image>
         <view class="column text-left">
@@ -19,17 +14,25 @@
         </view>
       </view>
       <text class="border-line"></text>
-      <view class="coupon-select row text-bold padding-lr">
+      <view
+        class="coupon-select row text-bold padding-lr"
+        @click.stop="onSelectAddrClick"
+      >
         <text>收货地址</text>
         <view class="addr-select-preview text-grey text-sm">
-          <text class="text-grey "> Z先生 19988888888</text>
+          <text class="text-grey"> Z先生 19988888888</text>
           广西省南宁CXXXXXXXXX
         </view>
       </view>
       <text class="border-line"></text>
-      <view class="coupon-select row text-bold padding-lr">
-        <text>优惠券</text> <text class="coupon-select-text"> 1张可用</text>
+      <view
+        class="coupon-select row text-bold padding-lr"
+        @click.stop="onSelectCouponClick"
+      >
+        <text>优惠券</text>
+        <text class="coupon-select-text"> {{ showSelectedCoupon() }}</text>
       </view>
+
       <!-- <text class="border-line"></text>
     <text class="text-bold padding-lr">颜色分类</text>
     <view class="color-class">
@@ -50,12 +53,7 @@
               -
             </button>
             <!-- 数值 -->
-            <input
-              class="number"
-              type="number"
-              :value="count"
-              disabled="disabled"
-            />
+            <input class="number" type="number" :value="count" disabled="disabled" />
             <!-- 加号 -->
             <button
               :class="'sign ' + (count > orgiinStock ? 'disabled' : 'normal')"
@@ -81,20 +79,32 @@
 <script>
 import { ref } from "vue";
 import combButton from "@/components/comb-button.vue";
+import { useStore } from "vuex";
 export default {
   name: "cui-shoping-cart-dialog",
   components: { combButton },
   props: {
     show: Boolean,
+    onSelectAddrClick: Function,
+    onSelectCouponClick: Function,
     item: { type: Object },
-    addr: {type: Object},
-    coupon: {type: Object},
+    addr: { type: Object },
+    coupon: { type: Object },
     orgiinStock: { type: Number },
   },
   setup(props, ctx) {
+    const store = useStore();
     let count = ref(1);
-    let comButtomLeft = { text: "加入购物车" };
-    let comButtomRight = { text: "立即购买" };
+
+    /**处理显示当前选择的优惠券 */
+    function showSelectedCoupon() {
+      if (store.getters.SelectCoupon.id == null) {
+        return "N张可用";
+      } else {
+        /** 从状态管理器拿到当前选择的优惠券 */
+        return store.getters.SelectCoupon.desc;
+      }
+    }
 
     function toggleDialog() {
       console.log("send to parent ->");
@@ -128,11 +138,13 @@ export default {
       toggleDialog,
       count,
       totalMoney,
-      comButtomLeft,
-      comButtomRight,
+      comButtomLeft: { text: "加入购物车" },
+      comButtomRight: { text: "立即购买" },
       delCount,
       addCount,
       getItemImage,
+      showSelectedCoupon,
+      // selectCoupon,
     };
   },
 };
@@ -302,7 +314,7 @@ button.sign::after {
   color: red;
   font-size: x-small;
 }
-.addr-select-preview{
+.addr-select-preview {
   display: flex;
   flex-direction: column;
   text-align: right;
@@ -311,20 +323,20 @@ button.sign::after {
 }
 
 .coupon-select:after {
-    /* position: absolute; */
-    top: 0;
-    right: 0.9375rem;
-    bottom: 0;
-    display: block;
-    margin: auto;
-    width: 0.9375rem;
-    height: 0.9375rem;
-    color: black;
-    content: "\e6a3";
-    text-align: center;
-    font-size: 1.0625rem;
-    font-family: cuIcon;
-    line-height: 0.9375rem;
-    padding-left: 10px;
+  /* position: absolute; */
+  top: 0;
+  right: 0.9375rem;
+  bottom: 0;
+  display: block;
+  margin: auto;
+  width: 0.9375rem;
+  height: 0.9375rem;
+  color: black;
+  content: "\e6a3";
+  text-align: center;
+  font-size: 1.0625rem;
+  font-family: cuIcon;
+  line-height: 0.9375rem;
+  padding-left: 10px;
 }
 </style>
