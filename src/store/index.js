@@ -28,10 +28,8 @@ export default createStore({
         orderId: "订单id",
         orderStatu: "订单状态",
         waybillNumber: "KD0000000000000",
-        goodsList: [{
           goodsId: 1,
           buyCount: 1
-        }]
       }],
       addrs: [{
         name: "姓名",
@@ -68,6 +66,7 @@ export default createStore({
         // state.userInfo.nickName = obj.nickName;
         state.userInfo.oders = obj.oders;
         state.userInfo.addrs = obj.addrs;
+        state.userInfo.coupons = obj.coupons;
         state.userInfo.msgs = obj.msgs;
         state.userInfo.shoppingCart = obj.shoppingCart;    
         saveDate("userInfo", state.userInfo, () => { console.log("save userInfo") }); 
@@ -105,6 +104,13 @@ export default createStore({
   modules: {
   },
   getters: {
+    isLogined(state){
+      if (state.userInfo.id != null && state.userInfo.id != "") {
+        return true;
+      }else{
+        return false;
+      }
+    },
     drawerAction(state) {
       return state.drawerAction;
     },
@@ -125,6 +131,9 @@ export default createStore({
     },
     defaultAddr(state){
       return getDefaultAddr(state.userInfo.addrs);
+    },
+    coupons(state){
+      return state.userInfo.coupons;
     },
     systemInfo(state) {
       return state.systemInfo;
