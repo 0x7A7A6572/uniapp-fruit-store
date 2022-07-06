@@ -2,7 +2,12 @@
   <view class="dialog__layout">
     <view class="dialog__mask" @click="toggleDialog()" />
     <view class="dialog__container">
-      <icon class="image-close" @click="toggleDialog()" type="cancel" size="25" />
+      <icon
+        class="image-close"
+        @click="toggleDialog()"
+        type="cancel"
+        size="25"
+      />
       <view class="row text-bold">
         <image class="image-sku" :src="getItemImage(item)"> </image>
         <view class="column text-left">
@@ -12,6 +17,18 @@
             >规格：{{ item.goodsWeight }}斤/{{ item.goodsPack }}</text
           >
         </view>
+      </view>
+      <text class="border-line"></text>
+      <view class="coupon-select row text-bold padding-lr">
+        <text>收货地址</text>
+        <view class="addr-select-preview text-grey text-sm">
+          <text class="text-grey "> Z先生 19988888888</text>
+          广西省南宁CXXXXXXXXX
+        </view>
+      </view>
+      <text class="border-line"></text>
+      <view class="coupon-select row text-bold padding-lr">
+        <text>优惠券</text> <text class="coupon-select-text"> 1张可用</text>
       </view>
       <!-- <text class="border-line"></text>
     <text class="text-bold padding-lr">颜色分类</text>
@@ -26,17 +43,26 @@
           <!-- 主容器 -->
           <view class="stepper">
             <!-- 减号 -->
-            <button :class="'sign ' + (count < 2 ? 'disabled' : 'normal')" @click="delCount"
-              >-</button
+            <button
+              :class="'sign ' + (count < 2 ? 'disabled' : 'normal')"
+              @click="delCount"
             >
+              -
+            </button>
             <!-- 数值 -->
-            <input class="number" type="number" :value="count" disabled="disabled" />
+            <input
+              class="number"
+              type="number"
+              :value="count"
+              disabled="disabled"
+            />
             <!-- 加号 -->
             <button
               :class="'sign ' + (count > orgiinStock ? 'disabled' : 'normal')"
               @click="addCount"
-              >+</button
             >
+              +
+            </button>
           </view>
         </view>
       </view>
@@ -61,6 +87,8 @@ export default {
   props: {
     show: Boolean,
     item: { type: Object },
+    addr: {type: Object},
+    coupon: {type: Object},
     orgiinStock: { type: Number },
   },
   setup(props, ctx) {
@@ -69,7 +97,7 @@ export default {
     let comButtomRight = { text: "立即购买" };
 
     function toggleDialog() {
-      console.log("send to parent ->")
+      console.log("send to parent ->");
       ctx.emit("update:show", false);
       count.value = 1; //离开时清除conut计数
     }
@@ -93,7 +121,7 @@ export default {
     }
 
     function getItemImage(item) {
-        return item.imgMain;
+      return item.imgMain;
     }
 
     return {
@@ -117,7 +145,7 @@ export default {
   height: 26px;
   margin: 0 auto;
 }
-button.sign::after{
+button.sign::after {
   content: none;
 }
 
@@ -265,4 +293,38 @@ button.sign::after{
   margin-left: 2em;
   border-radius: 5px;
 } */
+.coupon-select {
+  display: flex;
+}
+.coupon-select-text {
+  text-align: right;
+  flex: 1;
+  color: red;
+  font-size: x-small;
+}
+.addr-select-preview{
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  flex: auto;
+  font-weight: unset;
+}
+
+.coupon-select:after {
+    /* position: absolute; */
+    top: 0;
+    right: 0.9375rem;
+    bottom: 0;
+    display: block;
+    margin: auto;
+    width: 0.9375rem;
+    height: 0.9375rem;
+    color: black;
+    content: "\e6a3";
+    text-align: center;
+    font-size: 1.0625rem;
+    font-family: cuIcon;
+    line-height: 0.9375rem;
+    padding-left: 10px;
+}
 </style>

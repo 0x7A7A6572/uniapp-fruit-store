@@ -9,13 +9,16 @@
         ></button>
         <view
           :class="
-            'cu-tag  badge cuIcon-crownfill ' + (userInfo.vip ? 'bg-yellow' : 'bg-grey')
+            'cu-tag  badge cuIcon-crownfill ' +
+            (userInfo.vip ? 'bg-yellow' : 'bg-grey')
           "
         >
         </view>
       </view>
       <view class="user-name">
-        <text class="text-white text-bold text-xxl">{{ userInfo.nickName }} </text>
+        <text class="text-white text-bold text-xxl"
+          >{{ userInfo.nickName }}
+        </text>
       </view>
     </view>
     <view class="cu-list menu user-list sm-border card-menu">
@@ -60,7 +63,7 @@ export default {
       try {
         let userinfo = uni.getStorageSync("userInfo");
         if (userinfo) {
-          console.log("toLogin >userinfo:",userinfo)
+          console.log("toLogin >userinfo:", userinfo);
           login.do((res) => {
             console.log(">>>>", res);
           });
@@ -69,6 +72,16 @@ export default {
             nickName: userinfo.nickName,
           });
         } else {
+          /*  #ifdef  H5 */
+         login.do((res) => {
+            console.log(">>>>", res);
+            store.commit("updatedUserBaseInfo", {
+              avatarUrl: "",
+              nickName: "H5",
+            });
+          });
+          /*  #endif  */
+          // #ifdef  MP-WEIXIN
           login.do((res) => {
             console.log(">>>>", res);
             store.commit("updatedUserBaseInfo", {
@@ -83,6 +96,7 @@ export default {
               nickName: res.userInfo.nickName,
             });
           });
+          //#endif
         }
       } catch (e) {
         // error
