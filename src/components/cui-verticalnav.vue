@@ -36,7 +36,7 @@
               <text class="cuIcon-title text-orange"></text> {{ item.className }}
             </view>
           </view>
-          <view class="cu-list menu-avatar">
+          <view class="cu-list">
             <view
               class="cu-item"
               v-for="(_item, _index) in item.classGoods"
@@ -156,7 +156,7 @@ export default {
   background-color: #fff;
   margin: 0;
   border: none;
-  height: 50px;
+  height: auto !important;
   position: relative;
 }
 
@@ -167,7 +167,7 @@ export default {
 .VerticalNav.nav .cu-item.cur::after {
   content: "";
   width: 8upx;
-  height: 30upx;
+  /* height: 30upx; */
   border-radius: 10upx 0 0 10upx;
   position: absolute;
   background-color: currentColor;

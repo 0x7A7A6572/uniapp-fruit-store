@@ -4,7 +4,7 @@
       <text class="__title">新用户首单福利</text>
       <text class="__desc">全场享惊喜折扣</text>
       <text class="__go main-color-red">立即购 ></text>
-      <image class="__bg" src="../static/images/gift.png" />
+      <image class="__bg am-gift" src="../static/images/gift.png" />
     </view>
     <view class="welfare-zone main-color-yellow" @click="goActivityPage">
       <text class="__title">活动专区</text>
@@ -65,14 +65,14 @@ export default {
   font-size: larger;
   /* color: red; */
   padding: 10px;
-    z-index: 1;
+  z-index: 1;
 }
 .__desc {
   margin-top: -5px;
   padding: 0px 10px;
   /* color: red; */
   font-size: smaller;
-    z-index: 1;
+  z-index: 1;
 }
 .__go {
   padding: 2px 5px;
@@ -81,7 +81,7 @@ export default {
   /* background-color: red; */
   color: white;
   border-radius: 10px;
-    z-index: 1;
+  z-index: 1;
 }
 .__bg {
   position: absolute;
@@ -91,9 +91,13 @@ export default {
   width: 15vw;
   height: 15vw;
 }
-.__bg:hover {
-  transform: rotate(360deg);
+
+.am-gift {
+  animation: am-rotate 0.5s linear 1s infinite alternate;
 }
+/* .__bg:hover {
+  transform: rotate(360deg);
+} */
 
 view.main-color-red {
   background-color: rgb(255 57 57 / 21%);
@@ -111,5 +115,17 @@ view.main-color-yellow {
 
 .__go.main-color-yellow {
   background-color: orange;
+}
+
+@keyframes am-rotate {
+  0% {
+    transform: rotate(380deg);
+  }
+  50% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(350deg);
+  }
 }
 </style>
