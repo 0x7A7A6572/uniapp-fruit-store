@@ -53,7 +53,7 @@ export default {
     });
 
     function couponClick(coupon) {
-      if (isSelectMode) {
+      if (isSelectMode.value) {
         if (selectModeTotalMoney >= coupon.fillPrice) {
           console.log("选择了优惠券：", coupon.desc);
           store.commit("updateSelectCoupon", coupon);
