@@ -157,10 +157,10 @@ export default {
       });
     }
        /* 选择优惠券 */
-    function onSelectCouponClick() {
-      console.log("i ckick SelectCoupon");
+    function onSelectCouponClick(totalMoney) {
+      console.log("i ckick SelectCoupon",totalMoney);
       uni.navigateTo({
-        url: "/pages/coupon/coupon?msg=onSelectCouponClick",
+        url: "/pages/coupon/coupon?msg=onSelectCouponClick&totalMoney=" + totalMoney,
       });
     }
        /* 选择发货地址 */

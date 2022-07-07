@@ -4,9 +4,13 @@
     <view class="dialog__container">
       <icon class="image-close" @click="toggleDialog()" type="cancel" size="25" />
       <view class="row text-bold">
-        <image class="image-sku" :src="getItemImage(item)"> </image>
+        <image class="image-sku" :src="item.imgMain"> </image>
         <view class="column text-left">
-          <text class="sku-price">￥{{ totalMoney(item.goodsPrice) }}</text>
+          <view class="sku-price"
+            >￥{{ totalMoney(item.goodsPrice) }}
+            <view v-show="discountedPrice()" class="sku-discounted-price"
+              >{{ discountedPrice() }}</view
+            ></view>
           <text class="sku-title">库存: {{ item.stock }} 件</text>
           <text class="sku-title"
             >规格：{{ item.goodsWeight }}斤/{{ item.goodsPack }}</text
@@ -27,7 +31,7 @@
       <text class="border-line"></text>
       <view
         class="coupon-select row text-bold padding-lr"
-        @click.stop="onSelectCouponClick"
+        @click.stop="onSelectCouponClick(totalMoney(item.goodsPrice))"
       >
         <text>优惠券</text>
         <text class="coupon-select-text"> {{ showSelectedCoupon() }}</text>
@@ -95,11 +99,12 @@ export default {
   setup(props, ctx) {
     const store = useStore();
     let count = ref(1);
+    let currPrice = ref(0); //当前选择的商品总价
 
     /**处理显示当前选择的优惠券 */
     function showSelectedCoupon() {
       if (store.getters.SelectCoupon.id == null) {
-        return "N张可用";
+        return store.getters.usefulCoupon(currPrice.value) + "张可用";
       } else {
         /** 从状态管理器拿到当前选择的优惠券 */
         return store.getters.SelectCoupon.desc;
@@ -110,10 +115,16 @@ export default {
       console.log("send to parent ->");
       ctx.emit("update:show", false);
       count.value = 1; //离开时清除conut计数
+      currPrice.value = 0;
     }
 
     function totalMoney(unitPrice) {
-      return (unitPrice * count.value).toFixed(2);
+      currPrice.value = (unitPrice * count.value).toFixed(2);
+      if(store.getters.usefulCoupon(currPrice.value) == 0){
+        /** 重置优惠券选择器 */
+         store.commit("updateSelectCoupon", {});
+      }
+      return currPrice.value;
     }
 
     function delCount() {
@@ -130,8 +141,14 @@ export default {
       }
     }
 
-    function getItemImage(item) {
-      return item.imgMain;
+
+    /** 计算折后价 */
+    function discountedPrice() {
+      if (store.getters.SelectCoupon.id != null) {
+        return currPrice.value - store.getters.SelectCoupon.couponPrice;
+      } else {
+        return false;
+      }
     }
 
     return {
@@ -142,9 +159,8 @@ export default {
       comButtomRight: { text: "立即购买" },
       delCount,
       addCount,
-      getItemImage,
       showSelectedCoupon,
-      // selectCoupon,
+      discountedPrice,
     };
   },
 };
@@ -275,7 +291,22 @@ button.sign::after {
   left: 300rpx;
   margin: 1rpx;
   font-size: x-large;
+  float: left;
 }
+.sku-discounted-price {
+  color: white;
+  background-color: orangered;
+  font-size: small;
+  border-radius: 5px;
+  padding: 5px;
+  display: inline;
+}
+.sku-discounted-price::before {
+  content: "折后￥";
+  font-size: small;
+  display: inline;
+}
+
 .row .quantity-position {
   position: absolute;
   right: 30rpx;

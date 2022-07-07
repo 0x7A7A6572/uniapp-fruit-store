@@ -104,7 +104,7 @@ export default createStore({
       state.SelectAddr = addr;
     },
     updateSelectCoupon(state, coupon){
-      console.log("store update coupon:", coupon)
+      // console.log("store update coupon:", coupon)
       state.SelectCoupon = coupon;
     },
   },
@@ -169,6 +169,11 @@ export default createStore({
     },
     SelectAddr(state){
       return state.SelectAddr;
+    },
+    usefulCoupon(state){
+      return function(currPrice){
+         return getUsefulCoupon(state.userInfo.coupons, currPrice);
+      }
     }
   },
 })
@@ -218,4 +223,16 @@ function getDefaultAddr(addrs){
     }
   }
   return addrs[0]
+}
+
+/** 计算可用优惠券数量 */
+function getUsefulCoupon(coupons, currPrice){
+   let count = 0;
+   for(let index in coupons){
+    // console.log("计算可用数量",coupons[index].fillPrice,currPrice)
+    if(coupons[index].fillPrice <= currPrice){
+      count++;
+    }
+   }
+   return count;
 }

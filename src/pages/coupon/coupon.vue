@@ -42,18 +42,24 @@ export default {
     const store = useStore();
     let coupons = store.getters.coupons;
     let isSelectMode = ref(false);
+    let selectModeTotalMoney = 0;
 
     onLoad((options) => {
       console.log("上一个界面传过来的值：", options);
       if (options.msg == "onSelectCouponClick") {
+        selectModeTotalMoney = options.totalMoney;
         isSelectMode.value = true;
       }
     });
 
     function couponClick(coupon) {
       if (isSelectMode) {
-        console.log("选择了优惠券：",coupon);
-        store.commit("updateSelectCoupon", coupon);
+        if (selectModeTotalMoney >= coupon.fillPrice) {
+          console.log("选择了优惠券：", coupon.desc);
+          store.commit("updateSelectCoupon", coupon);
+        }else{
+          uni.showToast({title:"未满足使用条件",icon:"none"})
+        }
         uni.navigateBack();
       }
     }
@@ -168,7 +174,7 @@ export default {
 
 .l-tickets .title {
   text-align: center;
-  font-size: 40px;
+  font-size:  xx-large;
   margin: auto;
   color: white;
   /* font-weight: bold; */
