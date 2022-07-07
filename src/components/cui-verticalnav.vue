@@ -1,35 +1,41 @@
 <template>
-  <view class="goods-show">
-    <!-- 商品列表 -->
     <view class="VerticalBox">
+      <!-- 侧栏列表 -->
       <scroll-view
-        :hidden="goodsClass.length <= 1"
-        class="VerticalNav nav bg-white"
+        class="VerticalNav nav"
         scroll-y
         scroll-with-animation
-        style="height: calc(100vh - 375rpx)"
+        :scroll-top="verticalNavTop"
+        style="height: calc(100vh - 375upx)"
       >
+      <view class="cuIcon-search bg-white text-bold cu-item"></view>
         <view
-          :class="'cu-item ' + (index == TabCur ? 'text-orange cur' : '')"
+          class="cu-item"
+          :class="index == tabCur ? 'text-orange cur' : ''"
           v-for="(item, index) in goodsClass"
           :key="index"
+          @tap="TabSelect"
           :data-id="index"
         >
           {{ item.className }}
         </view>
       </scroll-view>
+
+      <!-- 商品列表 -->
       <scroll-view
         class="VerticalMain"
         scroll-y
         scroll-with-animation
         style="height: calc(100vh - 375rpx)"
-        :scroll-into-view="'main-' + MainCur"
+        :scroll-into-view="'main-' + mainCur"
+        @scroll="VerticalMain"
       >
         <!--bindscroll="VerticalMain"> -->
         <view
           class="padding-top padding-lr"
           v-for="(item, index) in goodsClass"
           :key="index"
+          :id="'main-' + index"
         >
           <view class="cu-bar solid-bottom bg-white">
             <view class="action">
@@ -53,13 +59,11 @@
         </view>
       </scroll-view>
     </view>
-
-    <!-- <i-load-more tip="暂无数据" loading="{{ false }}" /> -->
-  </view>
 </template>
 
 <script>
 import cuiGoodsItem from "@/components/cui-goods-item.vue";
+import { ref } from "vue";
 import selloutImage from "@/static/images/sellout.png";
 export default {
   name: "cui-vertivalnav",
@@ -69,72 +73,53 @@ export default {
     itemclick: { type: Function },
     goodsClass: { type: Array },
   },
-  data() {
-    return {
-      tabCur: 0,
-      selloutImage: selloutImage,
-      list: [],
-      tabCur: 0,
-      mainCur: 0,
-      load: true,
-    };
-  },
-  onLoad() {
-    uni.showLoading({
-      title: "加载中...",
-      mask: true,
-    });
-    let list = [{}];
-    for (let i = 0; i < 26; i++) {
-      list[i] = {};
-      list[i].name = String.fromCharCode(65 + i);
-      list[i].id = i;
+  setup(props) {
+    let verticalNavTop = ref(0);
+    let tabCur = ref(0);
+    let mainCur = ref(0);
+    let load = ref(true);
+    
+function TabSelect(e) {
+      tabCur.value = e.currentTarget.dataset.id;
+      mainCur.value = e.currentTarget.dataset.id;
+      verticalNavTop.value = (e.currentTarget.dataset.id - 1) * 50;
     }
-    this.list = list;
-    this.listCur = list[0];
-  },
-  onReady() {
-    uni.hideLoading();
-  },
-  methods: {
-    TabSelect(e) {
-      this.tabCur = e.currentTarget.dataset.id;
-      this.mainCur = e.currentTarget.dataset.id;
-    },
-    VerticalMain(e) {
-      // #ifdef MP-ALIPAY
-      return false; //支付宝小程序暂时不支持双向联动
-      // #endif
-      let that = this;
-      let tabHeight = 0;
-      if (this.load) {
-        for (let i = 0; i < this.list.length; i++) {
-          let view = uni.createSelectorQuery().select("#main-" + this.list[i].id);
-          view
-            .fields(
-              {
-                size: true,
-              },
-              (data) => {
-                this.list[i].top = tabHeight;
-                tabHeight = tabHeight + data.height;
-                this.list[i].bottom = tabHeight;
-              }
-            )
-            .exec();
-        }
-        this.load = false;
-      }
-      let scrollTop = e.detail.scrollTop + 10;
-      for (let i = 0; i < this.list.length; i++) {
-        if (scrollTop > this.list[i].top && scrollTop < this.list[i].bottom) {
-          this.verticalNavTop = (this.list[i].id - 1) * 50;
-          this.tabCur = this.list[i].id;
-          console.log(scrollTop);
-          return false;
-        }
-      }
-    },
+
+  function  VerticalMain(e) {
+      // let tabHeight = 0;
+      // if (load) {
+      //   for (let i = 0; i < props.goodsClass.length; i++) {
+      //     let view = uni.createSelectorQuery().select("#main-" + props.goodsClass[i].id);
+      //     view.fields(
+      //         {
+      //           size: true,
+      //         },
+      //         (data) => {
+      //           props.goodsClass.top = tabHeight;
+      //           tabHeight = tabHeight + data.height;
+      //           props.goodsClass.bottom = tabHeight;
+      //         }
+      //       )
+      //       .exec();
+      //   }
+      //  load = false;
+      // }
+      // let scrollTop = e.detail.scrollTop + 10;
+      // for (let i = 0; i < props.goodsClass.length; i++) {
+      //   if (scrollTop > props.goodsClass[i].top && scrollTop < props.goodsClass[i].bottom) {
+      //     verticalNavTop.value = (props.goodsClass[i].id - 1) * 50;
+      //    tabCur.value = props.goodsClass[i].id;
+      //     console.log(scrollTop);
+      //     return false;
+      //   }
+      // }
+    }
+    return {
+      mainCur,
+      tabCur,
+      verticalNavTop,
+      TabSelect,VerticalMain,selloutImage
+    };
   },
 };
 </script>
@@ -179,6 +164,8 @@ export default {
 
 .VerticalBox {
   display: flex;
+  background-color: white;
+  height: 100%;
 }
 
 .VerticalMain {
@@ -186,7 +173,4 @@ export default {
   flex: 1;
 }
 
-.goods-show {
-  background-color: white;
-}
 </style>
