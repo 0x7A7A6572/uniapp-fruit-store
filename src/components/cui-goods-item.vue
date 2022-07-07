@@ -99,17 +99,19 @@ export default {
 
 .goods-item-none img,
 .goods-item-none image {
-  position: absolute;
+  /* position: absolute;
   width: 30%;
   height: 50%;
   left: 30%;
   top: 50%;
+  */
   /** 更大的馨售 */
   position: absolute;
   width: 40%;
   height: 74%;
   left: 18%;
   top: 26%;
+   object-fit: cover;
 }
 
 /** 合并圆角按钮 */
