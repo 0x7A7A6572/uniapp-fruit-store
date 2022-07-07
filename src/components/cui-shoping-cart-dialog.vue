@@ -24,8 +24,7 @@
       >
         <text>收货地址</text>
         <view class="addr-select-preview text-grey text-sm">
-          <text class="text-grey"> Z先生 19988888888</text>
-          广西省南宁CXXXXXXXXX
+               {{showSelectedAddr()}}
         </view>
       </view>
       <text class="border-line"></text>
@@ -110,6 +109,20 @@ export default {
         return store.getters.SelectCoupon.desc;
       }
     }
+    /** 显示选择的地址/默认地址  */
+    function showSelectedAddr(){
+      if(store.getters.SelectAddr.name == null){
+        return  store.getters.defaultAddr.name  + " "
+        + store.getters.defaultAddr.phone + "\n"
+        + store.getters.defaultAddr.region.join(" ") + " "
+        + store.getters.defaultAddr.address;
+      }else{
+        return store.getters.SelectAddr.name + " "
+        + store.getters.SelectAddr.phone + "\n"
+        + store.getters.SelectAddr.region.join(" ") + " "
+        + store.getters.SelectAddr.address;
+      }
+    }
 
     function toggleDialog() {
       console.log("send to parent ->");
@@ -160,7 +173,7 @@ export default {
       delCount,
       addCount,
       showSelectedCoupon,
-      discountedPrice,
+      discountedPrice,showSelectedAddr
     };
   },
 };
@@ -351,6 +364,7 @@ button.sign::after {
   text-align: right;
   flex: auto;
   font-weight: unset;
+  white-space: pre-wrap; /** 使<text> \n 生效 */
 }
 
 .coupon-select:after {

@@ -100,11 +100,6 @@ export default {
     let shopingCartAction = false;
     let shopingCartDialogShow = ref(false);
 
-    /** dialog选择优惠券和地址时返回的对象 */
-    // let SelectCoupon = ref({});
-    // let SelectAddr = ref({});
-
-
     /* 购物车数据 */
     let shoppingCart = {
       goodsList: [

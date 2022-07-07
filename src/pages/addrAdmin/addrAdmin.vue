@@ -16,7 +16,7 @@
         v-for="(item, index) in addrs"
         class="card-item solid-bottom action"
         :key="index"
-        @click="editAddr(item,index)"
+        @click="addrClick(item,index)"
       >
         <view class="addr-msg">
           <text class="text-xl text-bold padding">{{ item.name }}</text>
@@ -119,6 +119,7 @@ import cuiFloatActionButton from "@/components/cui-float-action-button.vue";
 // import smart from "address-smart-parse";
 import otherApi from "@/api/other.js";
 import utils from "@/utils/utils.js";
+import { onLoad } from "@dcloudio/uni-app";
 import { useStore } from "vuex";
 import { ref } from "vue";
 // import uniEasyinput from "@/components/uni-easyinput/uni-easyinput.vue";
@@ -136,6 +137,26 @@ export default {
     let create_name = ref("");
     let create_phone = ref("");
     let isDefaultAddr = ref(false);
+    let isSelectMode = ref(false);
+
+    onLoad((options) => {
+      console.log("上一个界面传过来的值：", options);
+      if (options.msg == "onSelectAddrClick") {
+        isSelectMode.value = true;
+      }
+    });
+
+  /** 地址item点击事件 */
+   function addrClick(addr, index) {
+      if (isSelectMode.value) {
+          console.log("选择了地址：", addr.toString());
+          store.commit("updateSelectAddr", addr);
+          uni.navigateBack();
+          isSelectMode.value = false; //重置
+      }else{
+        editAddr(addr, index);
+      }
+    }
 
     /** 自动识别收货地址 */
     function textareaAInput(e) {
@@ -291,7 +312,7 @@ export default {
       showModal,
       addAddr,
       delAddr,
-      editAddr,
+      // editAddr,
       inputNameChange,
       inputPhoneChange,
       inputAddressChange,
@@ -302,7 +323,7 @@ export default {
       create_address,
       create_name,
       create_phone,
-      isDefaultAddr,
+      isDefaultAddr,addrClick,
       addFabStyle: {
         off: "cuIcon-add",
         offColor: "white",
