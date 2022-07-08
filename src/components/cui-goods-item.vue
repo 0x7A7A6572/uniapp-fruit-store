@@ -45,8 +45,18 @@ export default {
   props: {
     item: { type: Object },
     selloutImage: { type: String },
-    tobuy: {type: Function, default: ()=>{console.log("not have click even")}},
-    itemclick: {type: Function, default: ()=>{console.log("not have itemclick even")}}
+    tobuy: {
+      type: Function,
+      default: () => {
+        console.log("not have click even");
+      },
+    },
+    itemclick: {
+      type: Function,
+      default: () => {
+        console.log("not have itemclick even");
+      },
+    },
   },
 };
 </script>
@@ -107,11 +117,12 @@ export default {
   */
   /** 更大的馨售 */
   position: absolute;
-  width: 40%;
-  height: 74%;
+  width: 25vw;
+  height: 25vw;
+  filter: brightness(1.6);
   left: 18%;
   top: 26%;
-   object-fit: cover;
+  object-fit: cover;
 }
 
 /** 合并圆角按钮 */
