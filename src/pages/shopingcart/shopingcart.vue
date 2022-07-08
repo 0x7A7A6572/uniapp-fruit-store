@@ -7,7 +7,7 @@
       :isBack="true"
     >
     </cui-logo-navbar>
-    <zx-water-fall :arts="getShopingcartItem()" :column="2" :onSelectItem="onSelectItem">
+    <zx-water-fall :arts="shopingcartList" :column="2" :onSelectItem="onSelectItem">
     </zx-water-fall>
     <view class="settlement-bar text-xxl">
       <text
@@ -28,6 +28,7 @@ import cuiLogoNavbar from "@/components/cui-logo-navbar.vue";
 import zxWaterFall from "@/components/zx-water-fall.vue";
 import { useStore } from "vuex";
 import { ref } from "vue";
+// import { onLoad } from "@dcloudio/uni-app";
 export default {
   components: { cuiLogoNavbar, zxWaterFall },
   setup() {
@@ -37,7 +38,7 @@ export default {
     let isSelectAll = ref(false);   //是否全选
     let totalMoney = ref(0); //当前选择的购物车商品总价
 
-    function getShopingcartItem() {
+    /** 初始化购物车数据 */
       shoppingCart.forEach((e) => {
         let goods = store.getters.goodsListById(e.goodsId);
         shopingcartList.value.push({
@@ -49,8 +50,6 @@ export default {
         });
       });
       console.log("shopingcartList", shopingcartList.value);
-      return shopingcartList.value;
-    }
 
     /** 选择购物车单商品 */
     function onSelectItem(item) {
@@ -67,18 +66,21 @@ export default {
     function selectAll() {
       isSelectAll.value = !isSelectAll.value;
       for (let index in shopingcartList.value) {
-        shopingcartList.value[index].selected = isSelectAll.value;
-        if (isSelectAll.value) {
-          totalMoney.value += shopingcartList.value[index].price;
-        } else {
+        if (isSelectAll.value == shopingcartList.value[index].selected) {
+          // totalMoney.value += shopingcartList.value[index].price;
+        } else if(isSelectAll.value  == true) {
+           totalMoney.value += shopingcartList.value[index].price;
+          shopingcartList.value[index].selected = isSelectAll.value;
+        }else if(isSelectAll.value  == false){
           totalMoney.value -= shopingcartList.value[index].price;
+          shopingcartList.value[index].selected = isSelectAll.value;
         }
+        // console.log("totalMoney.value",totalMoney.value);
       }
     }
 
     return {
-      shoppingCart,
-      getShopingcartItem,
+      shoppingCart,shopingcartList,
       onSelectItem,
       isSelectAll,
       selectAll,
