@@ -46,6 +46,7 @@ export default {
   name: "cui-user-drawer",
   setup() {
     const store = useStore();
+    let userInfo = store.getters.userInfo;
 
     function isPageAction(pageurl) {
       return pageurl == null ? "" : "arrow";
@@ -61,15 +62,15 @@ export default {
     }
     function toLogin() {
       try {
-        let userinfo = uni.getStorageSync("userInfo");
-        if (userinfo) {
-          console.log("toLogin >userinfo:", userinfo);
+        let localUserinfo = uni.getStorageSync("userInfo");
+        if (localUserinfo) {
+          console.log("toLogin >userinfo:", localUserinfo);
           login.do((res) => {
             console.log(">>>>", res);
           });
           store.commit("updatedUserBaseInfo", {
-            avatarUrl: userinfo.avatarUrl,
-            nickName: userinfo.nickName,
+            avatarUrl: localUserinfo.avatarUrl,
+            nickName: localUserinfo.nickName,
           });
         } else {
           /*  #ifdef  H5 */
@@ -84,10 +85,7 @@ export default {
           // #ifdef  MP-WEIXIN
           login.do((res) => {
             console.log(">>>>", res);
-            store.commit("updatedUserBaseInfo", {
-              avatarUrl: res.userInfo.avatarUrl,
-              nickName: res.userInfo.nickName,
-            });
+            store.commit("updatedUserInfo",res.data);
           });
           login.getUserProfile((res) => {
             console.log("getUserProfile", res);
@@ -109,47 +107,14 @@ export default {
       getItemColor,
       pageChange,
       toLogin,
+      userInfo,
     };
   },
 
   props: {
     menuList: {
       type: Array,
-    },
-    userInfo: {
-      type: Object,
-      default: {
-        type: "",
-        vip: false,
-        avatarUrl: "/static/images/avatar.png",
-        nickName: "未登录",
-        loveGoods: "暂无喜欢的商品",
-        oderrs: [
-          {
-            orderId: "订单id",
-            orderStatu: "订单状态",
-            waybillNumber: "KD0000000000000",
-            goodsId: 1,
-            buyCount: 1,
-          },
-        ],
-        adds: [
-          {
-            name: "方先生",
-            addr: "xx市xx区xx小区xx号",
-            namber: "13888888888",
-          },
-        ],
-        coupons: [
-          {
-            id: "优惠券id",
-            name: "满200减20优惠券",
-            full: 200,
-            reduction: 20,
-          },
-        ],
-      },
-    },
+    }
   },
   components: {
     useStore,

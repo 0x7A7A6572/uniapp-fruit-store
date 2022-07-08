@@ -40,7 +40,7 @@
     </view>
     <!-- 抽屉内 -->
     <scroll-view scroll-y class="DrawerWindow" :class="getDrawerStatuStyle()">
-      <cui-user-drawer :menuList="menuList" :userInfo="userInfo">
+      <cui-user-drawer :menuList="menuList" >
         <view v-if="userInfo.type == 'admin'" class="cu-item arrow" @click="toAdmin">
           <view class="content">
             <text class="cuIcon-crownfill text-yellow"></text>

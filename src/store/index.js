@@ -10,8 +10,8 @@ export default createStore({
     //用户数据
     userInfo: {
       id: null, /* 后端用code获取openid和session_key之后绑定到业务系统返回用户id */
-      type: 'admin', /*用户类型 user，admin */
-      vip: true,
+      type: 'user', /*用户类型 user，admin */
+      vip: false,
       avatarUrl: '/static/images/avatar.png', /* 用户头像 */
       nickName: '未登录',
       loveGoods: '暂无喜欢的商品',
