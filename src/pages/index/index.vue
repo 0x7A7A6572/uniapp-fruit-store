@@ -11,6 +11,7 @@
       :action="shopingCartAction"
       :actionStyle="shopingCartFabStyle"
       :offset="shopingCartOffset"
+      @tap="gotoShopingcart"
     >
       <text class="cuIcon-null cu-tag badge bg-yellow text-xsl">{{
         shoppingCart.goodsList.length
@@ -118,10 +119,17 @@ export default {
       notice.value = res.data.notice;
       store.commit("updateGoodsClass", res.data.goodsClass);
     });
-
+    // 打开Drawer
     function changeDrawer() {
       drawerStatus.value = !drawerStatus.value;
       action.value = !action.value;
+    }
+    // 打开购物车
+    function gotoShopingcart() {
+      console.log("NavChange -> gotoShopingcart");
+      uni.navigateTo({
+        url: "/pages/shopingcart/shopingcart",
+      });
     }
 
     function getDrawerStatuStyle() {
@@ -151,17 +159,17 @@ export default {
         url: "/pages/admin/admin",
       });
     }
-       /* 选择优惠券 */
+    /* 选择优惠券 */
     function onSelectCouponClick(totalMoney) {
-      console.log("i ckick SelectCoupon",totalMoney);
+      console.log("i ckick SelectCoupon", totalMoney);
       uni.navigateTo({
         url: "/pages/coupon/coupon?msg=onSelectCouponClick&totalMoney=" + totalMoney,
       });
     }
-       /* 选择发货地址 */
+    /* 选择发货地址 */
     function onSelectAddrClick() {
       console.log("i ckick SelectAddr");
-       uni.navigateTo({
+      uni.navigateTo({
         url: "/pages/addrAdmin/addrAdmin?msg=onSelectAddrClick",
       });
     }
@@ -202,8 +210,7 @@ export default {
       toGoodsDetails,
       onSelectCouponClick,
       onSelectAddrClick,
-      // SelectCoupon,
-      // SelectAddr
+      gotoShopingcart,
     };
   },
 };

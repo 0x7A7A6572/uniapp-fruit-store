@@ -7,17 +7,6 @@ export default createStore({
     showLog: false,
     drawerAction: true,
     goodsClass: [],
-    shoppingCart: {
-      goodsList: [{
-        goodsId: 1,
-        buyCount: 1
-      },
-      {
-        goodsId: 2,
-        buyCount: 3
-      },
-      ]
-    },
     //用户数据
     userInfo: {
       id: null, /* 后端用code获取openid和session_key之后绑定到业务系统返回用户id */
@@ -39,6 +28,16 @@ export default createStore({
         region: ["广东省", "广州市", "海珠区"],
         address: "详细地址",
         isDefault: false
+      }],
+      shoppingCart: [{
+        goodsId: 1,
+        buyCount: 1,
+        coupon: null,
+      },
+      {
+        goodsId: 2,
+        buyCount: 3,
+        coupon: "YHQ0000000001",
       }]
     },
     systemInfo: {
@@ -124,7 +123,7 @@ export default createStore({
       return state.drawerAction;
     },
     shoppingCart(state) {
-      return state.shoppingCart;
+      return state.userInfo.shoppingCart;
     },
     userInfo(state) {
       return state.userInfo;
