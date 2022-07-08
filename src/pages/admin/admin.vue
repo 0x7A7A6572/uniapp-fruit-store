@@ -193,6 +193,7 @@
 
 <script>
 import { ref } from "vue";
+import admin from "@/api/admin";
 export default {
   setup() {
     let navTab = ["待处理", "已完成", "异常"];
@@ -209,46 +210,15 @@ export default {
     let TabCur = ref(0);
     let scrollLeft = ref(0);
     let num = ref("");
-    let orders = [{
-      "id": "79550af26006d982001f86f80e27c9db",
-      "weight": 10.0,
-      "address": "广西壮族自治区 南宁市 江南区 盛邦领地",
-      "name": "方先生",
-      "oddNumbers": "9881403138471",
-      "phone": "1767777777",
-      "time": 1611061621000,
-      "type": "沙糖桔",
-      "state": "delivered",
-      "remarks": "要精品，拿来送人",
-      goodsId: 1,
-      buyCount: 1
-
-    }, {
-      "id": "79550af260070aa20022a9232b083be5",
-      "oddNumbers": "",
-      "phone": "13888888888",
-      "state": "undelivered",
-      "time": 1611061651000,
-      "type": "沃柑",
-      "weight": 10.0,
-      "address": "广西壮族自治区XX市XX区XX镇XX村XX屯XX号",
-      "name": "李先生",
-      "remarks": "无"
-    }, {
-      "id": "b00064a7600ebec100f247082dc167a2",
-      "oddNumbers": "988*********71",
-      "phone": "138****8888",
-      "state": "rejection",
-      "time": 1611061321000,
-      "type": "沙糖桔",
-      "weight": 10.0,
-      "address": "未知",
-      "name": "神秘人",
-      "remarks": ""
-    }];
+    let orders = ref([]);
     let modalName = ref("");
     let region = ref(["广西省","南宁市","江南区"]);
     let copyText = ref("");
+
+    admin.adminData((res)=>{
+       console.log("res:",res);
+       orders.value = res.data.orders;
+    });
 
     function RegionChange(e) {
        region.value = e.detail;
