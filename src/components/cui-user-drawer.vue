@@ -76,10 +76,7 @@ export default {
           /*  #ifdef  H5 */
          login.do((res) => {
             console.log(">>>>", res);
-            store.commit("updatedUserBaseInfo", {
-              avatarUrl: "",
-              nickName: "H5",
-            });
+            store.commit("updatedUserInfo",res.data);
           });
           /*  #endif  */
           // #ifdef  MP-WEIXIN
