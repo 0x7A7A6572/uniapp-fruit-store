@@ -57,10 +57,19 @@ export default {
         if (selectModeTotalMoney >= coupon.fillPrice) {
           console.log("选择了优惠券：", coupon.desc);
           store.commit("updateSelectCoupon", coupon);
-        }else{
-          uni.showToast({title:"未满足使用条件",icon:"none"})
+          uni.navigateBack();
+        } else {
+          let pages = getCurrentPages(); // 当前页面
+          let beforePage = pages[pages.length - 2]; // 前一个页面
+          uni.navigateBack({
+            delta: 1,
+            success: () => {
+              beforePage.$vm.indexToast("未满足使用条件"); // 执行index的toast
+            },
+          });
+          // uni.showToast({ title: "未满足使用条件", icon: "none" });
         }
-        uni.navigateBack();
+        // uni.navigateBack();
       }
     }
 
@@ -174,7 +183,7 @@ export default {
 
 .l-tickets .title {
   text-align: center;
-  font-size:  xx-large;
+  font-size: xx-large;
   margin: auto;
   color: white;
   /* font-weight: bold; */

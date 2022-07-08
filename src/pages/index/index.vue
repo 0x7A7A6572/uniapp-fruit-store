@@ -40,7 +40,7 @@
     </view>
     <!-- 抽屉内 -->
     <scroll-view scroll-y class="DrawerWindow" :class="getDrawerStatuStyle()">
-      <cui-user-drawer :menuList="menuList" >
+      <cui-user-drawer :menuList="menuList">
         <view v-if="userInfo.type == 'admin'" class="cu-item arrow" @click="toAdmin">
           <view class="content">
             <text class="cuIcon-crownfill text-yellow"></text>
@@ -174,6 +174,15 @@ export default {
       });
     }
 
+    /** 用于其他页面tosat返回index.vue， toast一闪而过 */
+    function indexToast(str, duration, icon) {
+      uni.showToast({
+        title: str,
+        duration: duration || 1000,
+        icon: icon || "none",
+      });
+    }
+
     onMounted(() => {
       setTimeout(() => {
         if (drawerStatus.value == false && userInfo.nickName == null) {
@@ -211,6 +220,7 @@ export default {
       onSelectCouponClick,
       onSelectAddrClick,
       gotoShopingcart,
+      indexToast
     };
   },
 };
