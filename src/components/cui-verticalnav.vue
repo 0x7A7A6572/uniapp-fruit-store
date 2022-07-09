@@ -165,12 +165,13 @@ function TabSelect(e) {
 .VerticalBox {
   display: flex;
   background-color: white;
-  height: 100%;
+  /* height: 100%; */
 }
 
 .VerticalMain {
   background-color: #f1f1f1;
   flex: 1;
+  padding-bottom: 15vh;
 }
 
 </style>
