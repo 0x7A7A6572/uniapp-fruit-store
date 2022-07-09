@@ -1,5 +1,5 @@
 <template>
-  <view class="dialog__layout">
+  <view class="dialog__layout bottom-modal">
     <view class="dialog__mask" @click="toggleDialog()" />
     <view class="dialog__container">
       <icon class="image-close" @click="toggleDialog()" type="cancel" size="25" />
@@ -8,7 +8,7 @@
         <view class="column text-left">
           <view class="sku-price"
             >￥{{ totalMoney(item.goodsPrice) }}
-            <view v-show="discountedPrice()" class="sku-discounted-price"
+            <view v-show="discountedPrice" class="sku-discounted-price"
               >{{ discountedPrice() }}</view
             ></view>
           <text class="sku-title">库存: {{ item.stock }} 件</text>
@@ -97,6 +97,7 @@ export default {
   },
   setup(props, ctx) {
     const store = useStore();
+    let isLogined = store.getters.isLogined;
     let count = ref(1);
     let currPrice = ref(0); //当前选择的商品总价
 
@@ -111,6 +112,8 @@ export default {
     }
     /** 显示选择的地址/默认地址  */
     function showSelectedAddr(){
+      // console.log("isLogined",isLogined)
+      if(!isLogined){return "";}
       if(store.getters.SelectAddr.name == null){
         return  store.getters.defaultAddr.name  + " "
         + store.getters.defaultAddr.phone + "\n"
@@ -165,6 +168,7 @@ export default {
     }
 
     return {
+      isLogined,
       toggleDialog,
       count,
       totalMoney,

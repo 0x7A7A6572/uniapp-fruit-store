@@ -22,7 +22,7 @@
       }}</text>
     </cui-float-action-button>
     <!-- 抽屉主页 -->
-    <scroll-view scroll-y :class="['DrawerPage',getDrawerStatuStyle()]">
+    <scroll-view scroll-y :class="['DrawerPage',drawerStatus]">
       <!-- 顶部logo -->
       <cui-logo-navbar :logo="logosrc" @tap="changeDrawer"></cui-logo-navbar>
       <!-- 轮播图 -->
@@ -40,10 +40,10 @@
       </cui-verticalnav>
     </scroll-view>
     <!-- 点击抽屉外关闭抽屉 -->
-    <view :class="['DrawerClose',getDrawerStatuStyle()]" @click="changeDrawer">
+    <view :class="['DrawerClose',drawerStatus]" @click="changeDrawer">
     </view>
     <!-- 抽屉内 -->
-    <scroll-view scroll-y  :class="['DrawerWindow',getDrawerStatuStyle()]">
+    <scroll-view scroll-y  :class="['DrawerWindow',drawerStatus]">
       <cui-user-drawer :menuList="menuList">
         <view
           v-if="userInfo.type == 'admin' && userInfo.id != null"
@@ -59,7 +59,7 @@
     </scroll-view>
     <!-- 点击购物后出现的弹窗 -->
     <cui-shoping-cart-dialog
-      v-show="shopingCartDialogShow"
+      v-if="shopingCartDialogShow"
       v-model:show="shopingCartDialogShow"
       :item="shopingCartItem"
       :orgiinStock="orgiinStock"
@@ -71,7 +71,7 @@
 
 <script>
 import { useStore } from "vuex";
-import { ref, onMounted } from "vue";
+import { ref} from "vue";
 import CONST from "@/utils/const.js";
 import apiGoods from "@/api/goods.js";
 import cuiVerticalnav from "@/components/cui-verticalnav.vue";
@@ -92,7 +92,7 @@ export default {
     welfareZone,
     useStore,
   },
-  setup(props, ctx) {
+  setup() {
     const store = useStore();
     let userInfo = store.getters.userInfo;
     let menuList = CONST.menuList;
@@ -135,6 +135,7 @@ export default {
       notice.value = res.data.notice;
       store.commit("updateGoodsClass", res.data.goodsClass);
     });
+    
     // 打开Drawer
     function changeDrawer() {
       drawerStatus.value = drawerStatus.value == "" ? "show" : "";
@@ -152,12 +153,6 @@ export default {
       uni.navigateTo({
         url: "/pages/shopingcart/shopingcart",
       });
-    }
-
-    function getDrawerStatuStyle() {
-      console.log("getDrawerStatuStyle",drawerStatus.value)
-      // let statu = drawerStatus ? "show" : "";
-      return  drawerStatus.value;
     }
 
     /** 打开购买弹窗 */
@@ -238,6 +233,7 @@ export default {
     // });
 
     return {
+      drawerStatus,
       changeDrawerButton,
       shopingCartButton,
       userInfo,
@@ -255,7 +251,6 @@ export default {
       notice,
       orgiinStock,
       changeDrawer,
-      getDrawerStatuStyle,
       tobuy,
       toAdmin,
       toGoodsDetails,
