@@ -1,7 +1,7 @@
 /**
  *  存放固定的一些内容,样式
  */
-import defaultLogoImg from "/static/images/logo.png";
+import defaultLogoImg from "@/static/images/logo.png";
 export default {
   logosrc: defaultLogoImg,
   //固定的菜单列表
