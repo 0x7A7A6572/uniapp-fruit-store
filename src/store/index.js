@@ -19,8 +19,8 @@ export default createStore({
         orderId: "订单id",
         orderStatu: "订单状态",
         waybillNumber: "KD0000000000000",
-          goodsId: 1,
-          buyCount: 1
+        goodsId: 1,
+        buyCount: 1
       }],
       addrs: [{
         name: "姓名",
@@ -58,64 +58,87 @@ export default createStore({
     },
     updatedUserInfo(state, obj) {
       if (obj.id != null && obj.id != "") {
-        // state.userInfo = obj;
-        state.userInfo.id = obj.id;
-        state.userInfo.type = obj.type;
-        state.userInfo.vip = obj.vip;
-        // mock只简单设置了get 所以把名字头像和用户数据分开了，get的是同一个用户
-        // state.userInfo.avatarUrl = obj.avatarUrl;
-        // state.userInfo.nickName = obj.nickName;
-        state.userInfo.oders = obj.oders;
-        state.userInfo.addrs = obj.addrs;
-        state.userInfo.coupons = obj.coupons;
-        state.userInfo.msgs = obj.msgs;
-        state.userInfo.shoppingCart = obj.shoppingCart;    
-        saveDate("userInfo", state.userInfo, () => { console.log("save userInfo") }); 
+      // state.userInfo = obj;
+      state.userInfo.id = obj.id;
+      state.userInfo.type = obj.type;
+      state.userInfo.vip = obj.vip;
+      // 演示mock只简单设置了get 所以把名字头像和用户数据分开了，get的是同一个用户,头像是微信用户
+      // state.userInfo.avatarUrl = obj.avatarUrl;
+      // state.userInfo.nickName = obj.nickName;
+      state.userInfo.oders = obj.oders;
+      state.userInfo.addrs = obj.addrs;
+      state.userInfo.coupons = obj.coupons;
+      state.userInfo.msgs = obj.msgs;
+      state.userInfo.shoppingCart = obj.shoppingCart;
+      saveDate("userInfo", state.userInfo, () => { console.log("save userInfo") });
       }
     },
     updatedUserBaseInfo(state, obj) {
       if (obj.avatarUrl != null && obj.nickName != null) {
         state.userInfo.avatarUrl = obj.avatarUrl;
         state.userInfo.nickName = obj.nickName;
-        saveDate("userInfo", state.userInfo, () => { console.log("save userInfo") });
+        saveDate("userInfo", state.userInfo, () => { console.log("save UserBaseInfo") });
+      }else{
+        state.userInfo.avatarUrl = '/static/images/avatar.png'; 
+        state.userInfo.nickName =  '未登录';
+        console.log("reset UserBaseInfo")
       }
     },
-    updateAddrs(state, addrs){
-      if(Array.isArray(addrs))
-      state.userInfo.addrs = addrs;
+    updateAddrs(state, addrs) {
+      if (Array.isArray(addrs))
+        state.userInfo.addrs = addrs;
     },
-    updateAddrIndex(state, editor){
+    updateAddrIndex(state, editor) {
       state.userInfo.addrs[editor.index] = editor.addr;
     },
-    pushAddr(state, addr){
-      if(typeof addr == "object"){
-        checkPutAddrs(state.userInfo.addrs,addr);
+    pushAddr(state, addr) {
+      if (typeof addr == "object") {
+        checkPutAddrs(state.userInfo.addrs, addr);
       }
     },
-    updateGoodsClass(state, array){
-      if(Array.isArray(array) && array[0].className != null){
+    updateGoodsClass(state, array) {
+      if (Array.isArray(array) && array[0].className != null) {
         state.goodsClass = array;
-      }else{
-        console.error("updateGoodsClass error",array);
+      } else {
+        console.error("updateGoodsClass error", array);
       }
     },
-    updateSelectAddr(state, addr){
+    updateSelectAddr(state, addr) {
       state.SelectAddr = addr;
     },
-    updateSelectCoupon(state, coupon){
+    updateSelectCoupon(state, coupon) {
       // console.log("store update coupon:", coupon)
       state.SelectCoupon = coupon;
     },
+    logOut(state) {
+      uni.removeStorage({
+        key: 'userInfo',
+        success: function (res) {
+          console.log('sucremoveStorage  userInfo success');
+          state.userInfo = {
+            id: null, type: 'user', vip: false,
+            avatarUrl: '/static/images/avatar.png',
+            nickName: '未登录'
+          };
+        },
+        fail: function (e) {
+          console.log('sucremoveStorage  userInfo fail',e);
+        },
+        complete: function(e){
+          // console.log("???")
+        }
+      });
+    }
   },
   actions: {
   },
   modules: {
   },
   getters: {
-    isLogined(state){
+    isLogined(state) {
       if (state.userInfo.id != null && state.userInfo.id != "") {
         return true;
-      }else{
+      } else {
         return false;
       }
     },
@@ -134,13 +157,13 @@ export default createStore({
         nickName: state.userInfo.nickName
       }
     },
-    addrs(state){
+    addrs(state) {
       return state.userInfo.addrs;
     },
-    defaultAddr(state){
+    defaultAddr(state) {
       return getDefaultAddr(state.userInfo.addrs);
     },
-    coupons(state){
+    coupons(state) {
       return state.userInfo.coupons;
     },
     systemInfo(state) {
@@ -155,23 +178,23 @@ export default createStore({
     showLog(state) {
       return state.showLog;
     },
-    goodsClass(state){
+    goodsClass(state) {
       return state.goodsClass;
     },
-    goodsListById(state){
-      return function(id){
+    goodsListById(state) {
+      return function (id) {
         return getGoodsListById(state.goodsClass, id);
       }
     },
-    SelectCoupon(state){
+    SelectCoupon(state) {
       return state.SelectCoupon;
     },
-    SelectAddr(state){
+    SelectAddr(state) {
       return state.SelectAddr;
     },
-    usefulCoupon(state){
-      return function(currPrice){
-         return getUsefulCoupon(state.userInfo.coupons, currPrice);
+    usefulCoupon(state) {
+      return function (currPrice) {
+        return getUsefulCoupon(state.userInfo.coupons, currPrice);
       }
     }
   },
@@ -191,10 +214,10 @@ function saveDate(key, data, callback) {
 }
 
 /** id查询商品详情 */
-function getGoodsListById(goodsClass, id){
-  for(let index in goodsClass){
-    for(let _index in goodsClass[index].classGoods){
-      if(goodsClass[index].classGoods[_index].id == id){
+function getGoodsListById(goodsClass, id) {
+  for (let index in goodsClass) {
+    for (let _index in goodsClass[index].classGoods) {
+      if (goodsClass[index].classGoods[_index].id == id) {
         return goodsClass[index].classGoods[_index];
       }
     }
@@ -203,10 +226,10 @@ function getGoodsListById(goodsClass, id){
 }
 
 /** 检查是否更改默认地址 */
-function checkPutAddrs(addrs, addr){
-  if(addr.isDefault){
-    for(let index in addrs){
-      if(addrs[index].isDefault){
+function checkPutAddrs(addrs, addr) {
+  if (addr.isDefault) {
+    for (let index in addrs) {
+      if (addrs[index].isDefault) {
         addrs[index].isDefault = false;
       }
     }
@@ -215,23 +238,23 @@ function checkPutAddrs(addrs, addr){
 }
 
 /** 获取默认地址 */
-function getDefaultAddr(addrs){
-  for(let index in addrs){
-    if(addrs[index].isDefault){
+function getDefaultAddr(addrs) {
+  for (let index in addrs) {
+    if (addrs[index].isDefault) {
       return addrs[index];
     }
   }
-  return addrs[0]
+  return {};
 }
 
 /** 计算可用优惠券数量 */
-function getUsefulCoupon(coupons, currPrice){
-   let count = 0;
-   for(let index in coupons){
+function getUsefulCoupon(coupons, currPrice) {
+  let count = 0;
+  for (let index in coupons) {
     // console.log("计算可用数量",coupons[index].fillPrice,currPrice)
-    if(coupons[index].fillPrice <= currPrice){
+    if (coupons[index].fillPrice <= currPrice) {
       count++;
     }
-   }
-   return count;
+  }
+  return count;
 }

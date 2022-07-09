@@ -9,23 +9,20 @@
         ></button>
         <view
           :class="
-            'cu-tag  badge cuIcon-crownfill ' +
-            (userInfo.vip ? 'bg-yellow' : 'bg-grey')
+            'cu-tag  badge cuIcon-crownfill ' + (userInfo.vip ? 'bg-yellow' : 'bg-grey')
           "
         >
         </view>
       </view>
       <view class="user-name">
-        <text class="text-white text-bold text-xxl"
-          >{{ userInfo.nickName }}
-        </text>
+        <text class="text-white text-bold text-xxl">{{ userInfo.nickName }} </text>
       </view>
     </view>
     <view class="cu-list menu user-list sm-border card-menu">
       <view
         v-for="item in menuList"
         :class="'cu-item ' + isPageAction(item.pageUrl)"
-        @click="pageChange(item.pageUrl)"
+        @click="pageChange(item.pageUrl, item.beforeToPage)"
         :key="item.text"
       >
         <view class="content">
@@ -54,15 +51,33 @@ export default {
     function getItemColor(color) {
       return color == null ? "text-grey" : color;
     }
-    function pageChange(pageurl) {
+    function pageChange(pageurl, beforeToPage) {
+      if (!beforeToPage(false)) {
+        return;
+      }
       console.log("NavChange ->", pageurl);
       uni.navigateTo({
         url: "/pages/" + pageurl + "/" + pageurl,
       });
     }
     function toLogin() {
+      /**已登录状态下退出登录 */
+      if (store.getters.isLogined) {
+        uni.showModal({
+          content: "是否退出登录",
+          success:  (res)=> {
+            if (res.confirm) {
+              store.commit("logOut");
+              /** 用于演示登录退出（没有实际完整登录流程） */
+              store.commit("updatedUserBaseInfo", {});
+            } 
+          },
+        });
+        return;
+      }
+      /**判断是否有本地登录缓存 */
+      let localUserinfo = uni.getStorageSync("userInfo");
       try {
-        let localUserinfo = uni.getStorageSync("userInfo");
         if (localUserinfo) {
           console.log("toLogin >userinfo:", localUserinfo);
           login.do((res) => {
@@ -74,15 +89,15 @@ export default {
           });
         } else {
           /*  #ifdef  H5 */
-         login.do((res) => {
+          login.do((res) => {
             console.log(">>>>", res);
-            store.commit("updatedUserInfo",res.data);
+            store.commit("updatedUserInfo", res.data);
           });
           /*  #endif  */
           // #ifdef  MP-WEIXIN
           login.do((res) => {
             console.log(">>>>", res);
-            store.commit("updatedUserInfo",res.data);
+            store.commit("updatedUserInfo", res.data);
           });
           login.getUserProfile((res) => {
             console.log("getUserProfile", res);
@@ -111,7 +126,7 @@ export default {
   props: {
     menuList: {
       type: Array,
-    }
+    },
   },
   components: {
     useStore,

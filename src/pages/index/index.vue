@@ -2,23 +2,27 @@
   <view>
     <!-- fab导航按钮 -->
     <cui-float-action-button
-      :action="action"
+      :action="changeDrawerButton.action"
       :offset="changeDrawerOffset"
+      :color="changeDrawerButton.color"
+      :icon="changeDrawerButton.icon"
+      :bg="changeDrawerButton.bg"
       @tap="changeDrawer"
     >
     </cui-float-action-button>
     <cui-float-action-button
-      :action="shopingCartAction"
-      :actionStyle="shopingCartFabStyle"
+      :color="shopingCartButton.color"
+      :icon="shopingCartButton.icon"
+      :bg="shopingCartButton.bg"
       :offset="shopingCartOffset"
       @tap="gotoShopingcart"
     >
       <text class="cuIcon-null cu-tag badge bg-yellow text-xsl">{{
-        shoppingCart.goodsList.length
+        shoppingCart.length
       }}</text>
     </cui-float-action-button>
     <!-- 抽屉主页 -->
-    <scroll-view scroll-y class="DrawerPage" :class="getDrawerStatuStyle()">
+    <scroll-view scroll-y :class="['DrawerPage',getDrawerStatuStyle()]">
       <!-- 顶部logo -->
       <cui-logo-navbar :logo="logosrc" @tap="changeDrawer"></cui-logo-navbar>
       <!-- 轮播图 -->
@@ -36,12 +40,16 @@
       </cui-verticalnav>
     </scroll-view>
     <!-- 点击抽屉外关闭抽屉 -->
-    <view class="DrawerClose" :class="getDrawerStatuStyle()" @click="changeDrawer">
+    <view :class="['DrawerClose',getDrawerStatuStyle()]" @click="changeDrawer">
     </view>
     <!-- 抽屉内 -->
-    <scroll-view scroll-y class="DrawerWindow" :class="getDrawerStatuStyle()">
+    <scroll-view scroll-y  :class="['DrawerWindow',getDrawerStatuStyle()]">
       <cui-user-drawer :menuList="menuList">
-        <view v-if="userInfo.type == 'admin'" class="cu-item arrow" @click="toAdmin">
+        <view
+          v-if="userInfo.type == 'admin' && userInfo.id != null"
+          class="cu-item arrow"
+          @click="toAdmin"
+        >
           <view class="content">
             <text class="cuIcon-crownfill text-yellow"></text>
             <text class="text-yellow">后台数据管理</text>
@@ -94,20 +102,28 @@ export default {
     let swiperImage = ref([]);
     let notice = ref("");
 
-    let drawerStatus = ref(false);
-    let action = ref(false);
+    let drawerStatus = ref("");
+    let changeDrawerButton = {
+      action: false,
+      color: "white",
+      bg: "orange",
+      icon: "cuIcon-cascades",
+    };
+
+    let shopingCartButton = {
+      action: false,
+      color: "white",
+      bg: "red",
+      icon: "cuIcon-cart",
+    };
+
     let shopingCartItem = ref({});
     let orgiinStock = ref(0);
     let shopingCartAction = false;
     let shopingCartDialogShow = ref(false);
 
     /* 购物车数据 */
-    let shoppingCart = {
-      goodsList: [
-        { goodsId: 1, buyCount: 1 },
-        { goodsId: 2, buyCount: 3 },
-      ],
-    };
+    let shoppingCart = store.getters.shoppingCart;
     let changeDrawerOffset = CONST.changeDrawerOffset;
     let shopingCartOffset = CONST.shopingCartOffset;
     let shopingCartFabStyle = CONST.shopingCartFabStyle;
@@ -121,11 +137,17 @@ export default {
     });
     // 打开Drawer
     function changeDrawer() {
-      drawerStatus.value = !drawerStatus.value;
-      action.value = !action.value;
+      drawerStatus.value = drawerStatus.value == "" ? "show" : "";
+      changeDrawerButton.action = !changeDrawerButton.action;
+      changeDrawerButton.icon = changeDrawerButton.action ? "cuIcon-right" : "cuIcon-cascades";
+      changeDrawerButton.color = changeDrawerButton.action ? "orange" : "white";
+      changeDrawerButton.bg = changeDrawerButton.action ? "white" : "orange";
     }
     // 打开购物车
     function gotoShopingcart() {
+      if (!isLogin(true)) {
+        return;
+      }
       console.log("NavChange -> gotoShopingcart");
       uni.navigateTo({
         url: "/pages/shopingcart/shopingcart",
@@ -133,12 +155,16 @@ export default {
     }
 
     function getDrawerStatuStyle() {
-      let statu = drawerStatus.value ? "show" : "";
-      return statu;
+      console.log("getDrawerStatuStyle",drawerStatus.value)
+      // let statu = drawerStatus ? "show" : "";
+      return  drawerStatus.value;
     }
 
     /** 打开购买弹窗 */
     function tobuy(item) {
+      if (!isLogin(true)) {
+        return;
+      }
       console.log("show shoping cart", item.id);
       shopingCartDialogShow.value = true;
       shopingCartItem.value = item;
@@ -161,6 +187,9 @@ export default {
     }
     /* 选择优惠券 */
     function onSelectCouponClick(totalMoney) {
+      if (!isLogin(false)) {
+        return;
+      }
       console.log("i ckick SelectCoupon", totalMoney);
       uni.navigateTo({
         url: "/pages/coupon/coupon?msg=onSelectCouponClick&totalMoney=" + totalMoney,
@@ -182,27 +211,40 @@ export default {
         icon: icon || "none",
       });
     }
-
-    onMounted(() => {
-      setTimeout(() => {
-        if (drawerStatus.value == false && userInfo.nickName == null) {
+    /** 判断是否登录 */
+    function isLogin(toChangeDrawer) {
+      if (store.getters.userInfo.id != null) {
+        //check cookice
+        return true;
+      } else {
+        indexToast("请先登录", 1000, "error");
+        if (toChangeDrawer) {
           changeDrawer();
         }
-      }, 1000);
-      if (userInfo.nickName != null) {
-        //已登录
+        return false;
       }
-      console.log("----onMounted");
-    });
+    }
+
+    // onMounted(() => {
+    //   setTimeout(() => {
+    //     if (drawerStatus.value == false && userInfo.nickName == null) {
+    //       changeDrawer();
+    //     }
+    //   }, 1000);
+    //   if (userInfo.nickName != null) {
+    //     //已登录
+    //   }
+    //   console.log("----onMounted");
+    // });
 
     return {
+      changeDrawerButton,
+      shopingCartButton,
       userInfo,
       menuList,
       logosrc,
-      drawerStatus,
       shopingCartDialogShow,
       shopingCartItem,
-      action,
       shopingCartAction,
       shoppingCart,
       changeDrawerOffset,
@@ -220,7 +262,45 @@ export default {
       onSelectCouponClick,
       onSelectAddrClick,
       gotoShopingcart,
-      indexToast
+      indexToast,
+      //菜单列表
+      menuList: [
+        {
+          icon: "cuIcon-like",
+          text: "我的收藏",
+          pageUrl: null,
+          beforeToPage: isLogin,
+        },
+        {
+          icon: "cuIcon-text",
+          text: "我的订单",
+          pageUrl: "orders",
+          beforeToPage: isLogin,
+        },
+        {
+          icon: "cuIcon-location",
+          text: "地址管理",
+          pageUrl: "addrAdmin",
+          beforeToPage: isLogin,
+        },
+        {
+          icon: "cuIcon-ticket",
+          text: "优惠券",
+          pageUrl: "coupon",
+          beforeToPage: isLogin,
+        },
+        {
+          icon: "cuIcon-creative",
+          text: "建议反馈",
+          pageUrl: "feedback",
+          beforeToPage: isLogin,
+        },
+        {
+          icon: "cuIcon-question",
+          text: "关于桔乐小铺",
+          pageUrl: "about",
+        },
+      ],
     };
   },
 };
@@ -247,7 +327,7 @@ page {
   /* width: 95vw; */
   /* position: relative; */
   padding-top: 5vh;
-  padding-bottom: 5vh;
+  /* padding-bottom: 5vh; */
   bottom: 0vh;
   text-align: center;
 }
@@ -293,7 +373,7 @@ page {
   right: 0;
   top: 0;
   color: transparent;
-  padding-bottom: 30rpx;
+  /* padding-bottom: 30rpx; */
   display: flex;
   align-items: flex-end;
   justify-content: center;
