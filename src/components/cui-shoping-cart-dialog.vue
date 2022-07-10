@@ -90,6 +90,8 @@ export default {
     show: Boolean,
     onSelectAddrClick: Function,
     onSelectCouponClick: Function,
+    onClickAddShopingcart: Function,
+    onClickBuyNow: Function,
     item: { type: Object },
     addr: { type: Object },
     coupon: { type: Object },
@@ -167,13 +169,15 @@ export default {
       }
     }
 
+    
+
     return {
       isLogined,
       toggleDialog,
       count,
       totalMoney,
-      comButtomLeft: { text: "加入购物车" },
-      comButtomRight: { text: "立即购买" },
+      comButtomLeft: { text: "加入购物车" , click: props.onClickAddShopingcart},
+      comButtomRight: { text: "立即购买" ,click: props.onClickBuyNow},
       delCount,
       addCount,
       showSelectedCoupon,

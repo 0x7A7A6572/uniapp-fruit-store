@@ -65,6 +65,8 @@
       :orgiinStock="orgiinStock"
       :onSelectCouponClick="onSelectCouponClick"
       :onSelectAddrClick="onSelectAddrClick"
+      :onClickAddShopingcart="onClickAddShopingcart"
+      :onClickBuyNow="onClickBuyNow"
     />
   </view>
 </template>
@@ -220,6 +222,15 @@ export default {
       }
     }
 
+   /** 购物dialog 的添加进购物车按钮和立即购买按钮*/
+    function onClickAddShopingcart(shopingcart){
+      console.log("i need add to shopingcart")
+    }
+
+    function onClickBuyNow(shopingcart){
+      console.log("goto buy now")
+    }
+
     // onMounted(() => {
     //   setTimeout(() => {
     //     if (drawerStatus.value == false && userInfo.nickName == null) {
@@ -258,6 +269,8 @@ export default {
       onSelectAddrClick,
       gotoShopingcart,
       indexToast,
+      onClickAddShopingcart,
+      onClickBuyNow,
       //菜单列表
       menuList: [
         {
