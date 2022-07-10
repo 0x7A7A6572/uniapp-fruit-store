@@ -34,6 +34,9 @@ export default {
         case "热卖":
           style = "text-red";
           break;
+        case "推荐":
+          style = "text-orange text-bold"
+          break
         default:
       }
       return style;
