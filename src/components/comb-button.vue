@@ -3,13 +3,13 @@
     <text
       class="__frb-left"
       :style="{ color: left.color, background: left.bg }"
-      @click="left.click"
+      @click.stop="left.click"
       >{{ left.text }}</text
     >
     <text
       class="__frb-right"
       :style="{ color: left.color, background: left.bg }"
-      @click="right.click"
+      @click.stop="right.click"
       >{{ right.text }}</text
     >
   </view>
