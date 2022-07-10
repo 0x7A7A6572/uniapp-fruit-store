@@ -76,6 +76,7 @@ function groupByColumn(array, column) {
   background-color: white;
   border-radius: 8px;
   padding: 2vw;
+  margin-top: 4vw;
 }
 
 .zx-water-fall__card img,
