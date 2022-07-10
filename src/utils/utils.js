@@ -22,6 +22,12 @@ export default {
             return true;
         } else
             return false;
-    }
+    },
+
+    /** 时间戳转时间 */
+    getData: function(n){
+        n=new Date(n);
+        return n.toLocaleDateString().replace(/\//g, "/") + " " + n.toTimeString().substr(0, 8);
+      }  
 
 }

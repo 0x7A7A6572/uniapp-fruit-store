@@ -15,7 +15,7 @@ export default createStore({
       avatarUrl: '/static/images/avatar.png', /* 用户头像 */
       nickName: '未登录',
       loveGoods: '暂无喜欢的商品',
-      oders: [{
+      orders: [{
         orderId: "订单id",
         orderStatu: "订单状态",
         waybillNumber: "KD0000000000000",
@@ -65,7 +65,7 @@ export default createStore({
       // 演示mock只简单设置了get 所以把名字头像和用户数据分开了，get的是同一个用户,头像是微信用户
       // state.userInfo.avatarUrl = obj.avatarUrl;
       // state.userInfo.nickName = obj.nickName;
-      state.userInfo.oders = obj.oders;
+      state.userInfo.orders = obj.orders;
       state.userInfo.addrs = obj.addrs;
       state.userInfo.coupons = obj.coupons;
       state.userInfo.msgs = obj.msgs;
@@ -196,6 +196,9 @@ export default createStore({
       return function (currPrice) {
         return getUsefulCoupon(state.userInfo.coupons, currPrice);
       }
+    },
+    orders(state){
+      return state.userInfo.orders;
     }
   },
 })
