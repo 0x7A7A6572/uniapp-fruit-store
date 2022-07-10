@@ -138,7 +138,7 @@ export default {
       store.commit("updateGoodsClass", res.data.goodsClass);
     });
     
-    // 打开Drawer
+    // 打开/关闭Drawer
     function changeDrawer() {
       drawerStatus.value = drawerStatus.value == "" ? "show" : "";
       changeDrawerButton.action = !changeDrawerButton.action;
@@ -224,7 +224,13 @@ export default {
 
    /** 购物dialog 的添加进购物车按钮和立即购买按钮*/
     function onClickAddShopingcart(shopingcart){
-      console.log("i need add to shopingcart")
+      console.log("i need add to shopingcart",shopingcart);
+      store.commit("addShopingcart",shopingcart);
+      //关闭弹窗
+      shopingCartDialogShow.value = false;
+      uni.showToast({
+        title:"已加入购物车"
+      })
     }
 
     function onClickBuyNow(shopingcart){

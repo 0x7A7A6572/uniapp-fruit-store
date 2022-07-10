@@ -103,13 +103,20 @@ export default createStore({
         console.error("updateGoodsClass error", array);
       }
     },
+    /** 更新购物弹窗当前选择的地址 */
     updateSelectAddr(state, addr) {
       state.SelectAddr = addr;
     },
+    /** 更新购物弹窗当前选择的优惠券 */
     updateSelectCoupon(state, coupon) {
       // console.log("store update coupon:", coupon)
       state.SelectCoupon = coupon;
     },
+    /** 加入购物车 */
+    addShopingcart(state, item){
+      state.userInfo.shoppingCart.push(item);
+    },
+    /** 登出 */
     logOut(state) {
       uni.removeStorage({
         key: 'userInfo',

@@ -71,7 +71,7 @@
       <comb-button
         :left="comButtomLeft"
         :right="comButtomRight"
-        width="90%"
+         width="90%"
       ></comb-button>
       <!-- <button  class="button-addCar" bindtap="addCar" formType="submit">加入购物车</button> -->
     </view>
@@ -169,6 +169,15 @@ export default {
       }
     }
 
+  /** 中转点击加购事件 */
+ function transitOnClickAddShopingcart(){
+  //传入购物车需要的数据
+   props.onClickAddShopingcart({
+        goodsId: props.item.id,
+        buyCount:  count.value,
+        coupon: null
+        })
+   }
     
 
     return {
@@ -176,7 +185,7 @@ export default {
       toggleDialog,
       count,
       totalMoney,
-      comButtomLeft: { text: "加入购物车" , click: props.onClickAddShopingcart},
+      comButtomLeft: { text: "加入购物车" , click: transitOnClickAddShopingcart},
       comButtomRight: { text: "立即购买" ,click: props.onClickBuyNow},
       delCount,
       addCount,
