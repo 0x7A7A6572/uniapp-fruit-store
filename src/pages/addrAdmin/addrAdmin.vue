@@ -8,7 +8,9 @@
     >
     </cui-logo-navbar>
     <cui-float-action-button
-      :actionStyle="addFabStyle"
+        icon = "cuIcon-add"
+        color = "white"
+        bg = "orange"
       @tap="showModal"
     ></cui-float-action-button>
     <view class="card-list" :style="{ paddingTop: statusBarHeight + navHeight + 'px' }">
@@ -324,11 +326,6 @@ export default {
       create_name,
       create_phone,
       isDefaultAddr,addrClick,
-      addFabStyle: {
-        off: "cuIcon-add",
-        offColor: "white",
-        offBg: "orange",
-      },
       navHeight: useStore().getters.nvaHeight,
       statusBarHeight: useStore().getters.statusBar,
       customItem: "全部",
