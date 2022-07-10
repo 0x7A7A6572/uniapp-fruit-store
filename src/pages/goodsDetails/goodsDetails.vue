@@ -1,5 +1,5 @@
 <template>
-  <view class="layout_details" :style="{paddingTop: navHeight + 'px'}">
+  <view class="layout_details" :style="{ paddingTop: navHeight + 'px' }">
     <cui-logo-navbar
       class="logo-nav"
       :height="navHeight"
@@ -8,46 +8,60 @@
       :title="goods.goodsName"
     >
     </cui-logo-navbar>
-    <image v-if="goods.video == null" :src="goods.imgMain" mode="widthFix" />
+    <image
+      v-if="goods.video == null"
+      class="radius-style"
+      :src="goods.imgMain"
+      mode="widthFix"
+    />
     <video
       v-else
-      class="max-width radius-style"
       :show-fullscreen-btn="true"
       :src="goods.video"
       object-fit="cover"
     />
 
-    <view class="cu-list menu sm-border card-menu margin-top">
-      <view class="cu-item arrow">
+    <view class="cu-list menu sm-border card-menu margin bg-white">
+      <view class="cu-item">
         <view class="content">
-          <text class="goods-style-desc text-grey"></text>
-          <text class="goods-style-select">规格</text>
+          <text class="goods-style-desc text-grey">品名：</text>
+          <text class="goods-style-select padding-left">{{ goods.goodsName }}</text>
         </view>
       </view>
 
-      <cui-counter
-        text=""
-        count=5
-        max=5
-        min=1
-      ></cui-counter>
+      <view class="cu-item">
+        <view class="content">
+          <text class="goods-style-desc text-grey">价格：</text>
+          <text class="goods-style-select padding-left text-orange text-bold">￥{{ goods.goodsPrice }}</text>
+        </view>
+      </view>
+
+      <view class="cu-item">
+        <view class="content">
+          <text class="goods-style-desc text-grey">规格：</text>
+          <text class="goods-style-select padding-left">{{ goods.goodsWeight + '斤/' + goods.goodsPack }}</text>
+        </view>
+      </view>
+
+      <view class="cu-item">
+        <view class="content">
+          <text class="goods-style-desc text-grey">详细：</text>
+        </view>
+      </view>
+      <image
+        class="max-width"
+        v-for="item in swiperImage"
+        :src="item"
+        mode="widthFix"
+        :key="item"
+      />
     </view>
 
-    <image
-      class="max-width"
-      v-for="item in swiperImage"
-      :src="item"
-      mode="widthFix"
-      :key="item"
-    />
-
     <view class="flxed-bottom cu-bar bg-white tabbar border shop text-larger">
-      <view class="action text-red">
-        <view class="cuIcon-likefill"></view> 已收藏
-      </view>
+      <view class="action text-red"> <view class="cuIcon-likefill"></view> 已收藏 </view>
       <view class="action">
         <view class="cuIcon-cart">
-          <view class="cu-tag badge">99</view>
+          <view class="cu-tag badge">{{shopingcartLenght}}</view>
         </view>
         购物车
       </view>
@@ -63,26 +77,27 @@
 import cuiLogoNavbar from "@/components/cui-logo-navbar.vue";
 import cuiRotationChart from "@/components/cui-rotation-chart.vue";
 import combButton from "@/components/comb-button.vue";
-import cuiCounter from '@/components/cui-counter.vue';
+import cuiCounter from "@/components/cui-counter.vue";
 import { ref } from "vue";
 import { useStore } from "vuex";
 import { onLoad } from "@dcloudio/uni-app";
 export default {
-  components: { cuiLogoNavbar, cuiRotationChart,combButton,cuiCounter },
+  components: { cuiLogoNavbar, cuiRotationChart, combButton, cuiCounter },
   setup() {
     const store = useStore();
     let goods = ref({});
     let swiperImage = ref([]);
+    let shopingcartLenght = store.getters.shoppingCart.length; 
     onLoad((options) => {
       console.log("上一个界面传过来的值：", options);
       goods.value = store.getters.goodsListById(options.id);
       swiperImage.value = goods.value.imgDetails;
     });
     return {
-      goods,
+      goods,shopingcartLenght,
       swiperImage,
       navHeight: useStore().getters.nvaHeight,
-      statusBarHeight: useStore().getters.statusBar
+      statusBarHeight: useStore().getters.statusBar,
     };
   },
 };
@@ -95,12 +110,17 @@ export default {
   height: 100%;
   padding-bottom: 10%;
 }
+
+uni-video {
+    width: 100% !important;
+}
+
 .radius-style {
   border-radius: 15px;
 }
-.max-width {
+/* .max-width {
   width: 90%;
-}
+} */
 .layout_details .cu-item {
   text-align: left;
 }
