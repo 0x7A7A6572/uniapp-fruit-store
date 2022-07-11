@@ -146,7 +146,7 @@ export default {
       changeDrawerButton.color = changeDrawerButton.action ? "orange" : "white";
       changeDrawerButton.bg = changeDrawerButton.action ? "white" : "orange";
     }
-    // 打开购物车
+    // 打开购物车页面
     function gotoShopingcart() {
       if (!isLogin(true)) {
         return;
