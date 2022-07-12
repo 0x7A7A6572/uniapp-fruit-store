@@ -318,6 +318,7 @@ function getShopingcartLenght(){
           icon: "cuIcon-question",
           text: "关于桔乐小铺",
           pageUrl: "about",
+          beforeToPage: isLogin,
         },
       ],
     };
