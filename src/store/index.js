@@ -155,6 +155,9 @@ export default createStore({
     shoppingCart(state) {
       return state.userInfo.shoppingCart;
     },
+    shoppingCartLenght(state){
+      return state.userInfo.shoppingCart.length;
+    },
     userInfo(state) {
       return state.userInfo;
     },

@@ -18,7 +18,7 @@
       @tap="gotoShopingcart"
     >
       <text class="cuIcon-null cu-tag badge bg-yellow text-xsl">{{
-        shoppingCart.length
+        getShopingcartLenght()
       }}</text>
     </cui-float-action-button>
     <!-- 抽屉主页 -->
@@ -40,7 +40,7 @@
       </cui-verticalnav>
     </scroll-view>
     <!-- 点击抽屉外关闭抽屉 -->
-    <view :class="['DrawerClose',drawerStatus]" @click="changeDrawer">
+    <view :class="['DrawerClose',drawerStatus]" @tap="changeDrawer">
     </view>
     <!-- 抽屉内 -->
     <scroll-view scroll-y  :class="['DrawerWindow',drawerStatus]">
@@ -208,6 +208,11 @@ export default {
         icon: icon || "none",
       });
     }
+
+function getShopingcartLenght(){
+  return store.getters.shoppingCartLenght;
+}
+
     /** 判断是否登录 */
     function isLogin(toChangeDrawer) {
       if (store.getters.userInfo.id != null) {
@@ -232,7 +237,7 @@ export default {
         title:"已加入购物车"
       })
     }
-
+/** 立即购买 */
     function onClickBuyNow(shopingcart){
       console.log("goto buy now")
     }
@@ -276,7 +281,7 @@ export default {
       gotoShopingcart,
       indexToast,
       onClickAddShopingcart,
-      onClickBuyNow,
+      onClickBuyNow,getShopingcartLenght,
       //菜单列表
       menuList: [
         {
