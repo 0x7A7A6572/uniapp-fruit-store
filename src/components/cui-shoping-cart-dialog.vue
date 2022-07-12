@@ -1,14 +1,14 @@
 <template>
   <view class="dialog__layout bottom-modal">
-    <view class="dialog__mask" @click="toggleDialog()" />
+    <view class="dialog__mask" @tap="toggleDialog()" />
     <view class="dialog__container">
-      <icon class="image-close" @click="toggleDialog()" type="cancel" size="25" />
+      <icon class="image-close" @tap="toggleDialog()" type="cancel" size="25" />
       <view class="row text-bold">
         <image class="image-sku" :src="item.imgMain"> </image>
         <view class="column text-left">
           <view class="sku-price"
             >￥{{ totalMoney(item.goodsPrice) }}
-            <view v-show="discountedPrice" class="sku-discounted-price"
+            <view v-if="discountedPrice()" class="sku-discounted-price"
               >{{ discountedPrice() }}</view
             ></view>
           <text class="sku-title">库存: {{ item.stock }} 件</text>
@@ -20,7 +20,7 @@
       <text class="border-line"></text>
       <view
         class="coupon-select row text-bold padding-lr"
-        @click.stop="onSelectAddrClick"
+        @tap="onSelectAddrClick"
       >
         <text>收货地址</text>
         <view class="addr-select-preview text-grey text-sm">
@@ -30,7 +30,7 @@
       <text class="border-line"></text>
       <view
         class="coupon-select row text-bold padding-lr"
-        @click.stop="onSelectCouponClick(totalMoney(item.goodsPrice))"
+        @tap="onSelectCouponClick(totalMoney(item.goodsPrice))"
       >
         <text>优惠券</text>
         <text class="coupon-select-text"> {{ showSelectedCoupon() }}</text>
@@ -51,7 +51,7 @@
             <!-- 减号 -->
             <button
               :class="'sign ' + (count < 2 ? 'disabled' : 'normal')"
-              @click="delCount"
+              @tap="delCount"
             >
               -
             </button>
@@ -60,7 +60,7 @@
             <!-- 加号 -->
             <button
               :class="'sign ' + (count > orgiinStock ? 'disabled' : 'normal')"
-              @click="addCount"
+              @tap="addCount"
             >
               +
             </button>
@@ -73,14 +73,13 @@
         :right="comButtomRight"
          width="90%"
       ></comb-button>
-      <!-- <button  class="button-addCar" bindtap="addCar" formType="submit">加入购物车</button> -->
     </view>
     <!-- </view> -->
   </view>
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref,  onMounted , onUpdated} from "vue";
 import combButton from "@/components/comb-button.vue";
 import { useStore } from "vuex";
 export default {
@@ -102,6 +101,13 @@ export default {
     let isLogined = store.getters.isLogined;
     let count = ref(1);
     let currPrice = ref(0); //当前选择的商品总价
+
+    onMounted(()=>{
+      console.log("dialog onMounted");
+    })
+    onUpdated(()=>{
+      console.log("dialog onUpdated");
+    })
 
     /**处理显示当前选择的优惠券 */
     function showSelectedCoupon() {
@@ -137,6 +143,7 @@ export default {
     }
 
     function totalMoney(unitPrice) {
+      console.log("totalMoney");
       currPrice.value = (unitPrice * count.value).toFixed(2);
       if(store.getters.usefulCoupon(currPrice.value) == 0){
         /** 重置优惠券选择器 */
@@ -146,6 +153,7 @@ export default {
     }
 
     function delCount() {
+      console.log("delCount");
       if (count.value > 1) {
         count.value--;
         props.item.stock++;
@@ -153,6 +161,7 @@ export default {
     }
 
     function addCount() {
+      console.log("addCount");
       if (count.value < props.orgiinStock) {
         count.value++;
         props.item.stock--;
