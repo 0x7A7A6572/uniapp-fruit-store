@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { ref,  onMounted , onUpdated} from "vue";
+import { ref } from "vue";
 import combButton from "@/components/comb-button.vue";
 import { useStore } from "vuex";
 export default {
@@ -101,13 +101,6 @@ export default {
     let isLogined = store.getters.isLogined;
     let count = ref(1);
     let currPrice = ref(0); //当前选择的商品总价
-
-    onMounted(()=>{
-      console.log("dialog onMounted");
-    })
-    onUpdated(()=>{
-      console.log("dialog onUpdated");
-    })
 
     /**处理显示当前选择的优惠券 */
     function showSelectedCoupon() {
@@ -143,7 +136,6 @@ export default {
     }
 
     function totalMoney(unitPrice) {
-      console.log("totalMoney");
       currPrice.value = (unitPrice * count.value).toFixed(2);
       if(store.getters.usefulCoupon(currPrice.value) == 0){
         /** 重置优惠券选择器 */
@@ -153,7 +145,6 @@ export default {
     }
 
     function delCount() {
-      console.log("delCount");
       if (count.value > 1) {
         count.value--;
         props.item.stock++;
@@ -161,7 +152,6 @@ export default {
     }
 
     function addCount() {
-      console.log("addCount");
       if (count.value < props.orgiinStock) {
         count.value++;
         props.item.stock--;
