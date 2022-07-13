@@ -1,14 +1,16 @@
-const smAddressUrl = "https://apis.map.qq.com/ws/geocoder/v1/";
-const key = "GTQBZ-J5SCF-7KKJV-JPBOX-WADNS-6DFGY";
+const smAddressUrl = "https://service.zzerx.cn/";
+
 export default {
     delay: 3000, //防抖延迟
     smAddress: function(addr,callback,delay){
         console.log("addr",addr)
         uni.request({
+            method: "POST",
             url: smAddressUrl,
             data: {
-                smart_address: addr,
-                key: key
+                type: "address",
+                address: addr
+                // key: key
             },
             header: {
                 'Content-Type': 'application/x-www-form-urlencoded'  

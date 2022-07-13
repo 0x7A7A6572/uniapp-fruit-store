@@ -166,23 +166,33 @@ export default {
       if (e.detail.cursor > 20) {
         //防抖
         otherApi.smAddress(e.detail.value, (res) => {
-          if (res.status == 0) {
-            console.log("smAddress ->", res);
-            let smartaddr = res.result;
-            create_name.value = smartaddr.person_name;
-            create_phone.value = smartaddr.tel;
-            create_address.value = smartaddr.short_address;
+          // if (res.status == 0) {
+           if (res.name != null) {
+            console.log("smAddress ->", res.name, "?");
+            create_name.value = res.name;
+            create_phone.value = res.phone;
+            create_address.value = res.street + res.address;
             region.value = [
-              smartaddr.address_components.province,
-              smartaddr.address_components.city,
-              smartaddr.address_components.district,
+              res.province,
+              res.city,
+              res.county,
             ];
+            // 旧腾讯地址识别开放api
+            // let smartaddr = res.result;
+            // create_name.value = smartaddr.person_name;
+            // create_phone.value = smartaddr.tel;
+            // create_address.value = smartaddr.short_address;
+            // region.value = [
+            //   smartaddr.address_components.province,
+            //   smartaddr.address_components.city,
+            //   smartaddr.address_components.district,
+            // ];
           } else {
             uni.showToast({
-              title: res.message,
+              title: "识别失败",
               icon: "none",
             });
-            console.log("smAddress ->", res);
+            console.log("smAddress ->", res, typeof res);
           }
         });
       }
