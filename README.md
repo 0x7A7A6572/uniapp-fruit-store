@@ -1,9 +1,17 @@
 ### FruitStore
 
+![演示](doc/images/mpcode.jpg)
 
-![演示](https://zzerx.cn/download/jielexiaopu.jpg)
+<div style='display:flex;height:300px;'>
 
-[如果小程序码过期未更新-》](https://zzerx.cn/download/jielexiaopu.jpg)
+![界面1](doc/images/ui1.png)
+![界面2](doc/images/ui2.png)
+![界面3](doc/images/ui3.png)
+![界面4](doc/images/ui4.png)
+![界面5](doc/images/ui5.png)
+![界面6](doc/images/ui6.png)
+
+</div>
 
 uniapp + ColorUI 微信水果店铺（不含后端）
 <!-- 说是uniapp+colorui 但是uniapp的组件没用到几个 colorui的使用也不是彻底 :) -->
